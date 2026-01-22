@@ -125,10 +125,11 @@ Your PR must include:
 
 This is primarily a documentation and template repository. No special setup required.
 
-**Optional tools:**
-- Markdown editor with preview (VS Code, Typora, etc.)
-- Git client
-- Text editor with YAML/JSON support
+**Recommended tools:**
+- Markdown editor with preview (VS Code, Typora, or similar)
+- Git client (Git 2.0+)
+- Text editor with YAML/JSON support (VS Code, Sublime Text, or similar)
+- Optional: Node.js 14+ (for future CLI tool development)
 
 ---
 

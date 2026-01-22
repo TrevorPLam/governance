@@ -278,7 +278,7 @@ Add to deviation request file:
 4. Verify prerequisites (none for first task)
 5. Execute task as written
 6. Mark checkbox as complete
-7. Move to Task 1.2
+7. Move to next task in sequence
 
 ### Example 2: Handling Needed Deviation
 

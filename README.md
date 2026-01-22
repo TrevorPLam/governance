@@ -344,7 +344,7 @@ cat PHASE_1_FOUNDATION_TODO.md  # (or current phase)
 
 ## 📜 License
 
-[To be determined]
+License to be determined. This repository is currently in planning/early development phase.
 
 ---
 
