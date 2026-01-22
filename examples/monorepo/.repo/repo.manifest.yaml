@@ -1,0 +1,56 @@
+# /.repo/repo.manifest.yaml
+# SOURCE OF TRUTH for executable commands + verification profiles.
+# RULE: Agents MUST NOT guess commands. If unknown, set <UNKNOWN> and open HITL.
+# <!-- GOVERNANCE: CUSTOM - Layer 1 -->
+
+repo:
+  ships: true
+  ship_kind: user_facing_app
+  release_protects: [app_stability, login_security, money_flows]
+
+prerequisites:
+  package_manager: npm
+  runtime_pinned: true
+  platform_tools_required_for_release: true
+
+# Canonical commands (names are fixed). Fill values by following /.repo/docs/standards/manifest.md
+# Placeholders:
+# - <UNKNOWN> = cannot determine from repo contents. Must create HITL item and stop on that portion.
+# - <FILL_FROM_REPO> = deterministically discoverable from repo; fill before merge (or waiver if allowed).
+commands:
+  install: "npm install"
+  check:quick: "npm run lint && npm run test"        # MUST include a fast build for the app
+  check:ci: "npm run check:ci"           # quick + required tests + full build
+  check:release: "npm run check:release"      # ci + security + budgets
+  check:governance: "npm run check:governance"   # governance-verify (repo local or via node script)
+  check:boundaries: "npm run check:boundaries"   # boundary checker (hybrid)
+  check:security: "npm run check:security"     # dep scan + secrets scan + forbidden patterns
+
+verify_profiles:
+  quick: [check:quick]
+  ci: [check:ci]
+  release: [check:release]
+  governance: [check:governance]
+
+tests:
+  required_level: unit+integration
+
+budgets:
+  mode: both               # bundle + runtime
+  enforcement: hard_fail_with_waiver
+  fallback_to_default: true
+  # defaults live in: /.repo/policy/QUALITY_GATES.md (if repo-specific budgets missing)
+
+security:
+  every_pr: true
+  release_includes_security: true
+  dependency_vulns_always_hitl: true
+  secrets_absolute_prohibition: true
+  forbidden_patterns_source: "/.repo/policy/SECURITY_BASELINE.md"
+
+boundaries:
+  enforcement: hybrid_checker_plus_manifest_edges
+  edges_model: layered_allow_list
+  # Explicit edges represent allowed exceptions beyond the default import direction.
+  # Format: from -> to, with reason + required ADR if cross-feature.
+  edges: []
