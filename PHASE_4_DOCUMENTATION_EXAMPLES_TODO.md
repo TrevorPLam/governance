@@ -3,7 +3,7 @@
 
 **Status:** 🚧 IN PROGRESS  
 **Started:** 2026-01-22  
-**Progress:** ~30% Complete (Task 1.1 complete, Task 1.2 in progress)
+**Progress:** ~45% Complete (Tasks 1.1 and 1.2 complete, Task 1.3 next)
 
 ---
 
@@ -49,7 +49,7 @@ Create comprehensive user-facing documentation, working examples, visual diagram
   - [x] Agent execution model
   - [x] Visual diagrams
 
-#### 1.2 How-To Guides 🚧 IN PROGRESS (2/6 complete)
+#### 1.2 How-To Guides ✅ COMPLETE (6/6 complete)
 - [x] Create docs/guides/ folder
 - [x] Create HOW_TO_CUSTOMIZE_POLICIES.md:
   - [x] Step-by-step customization
@@ -65,37 +65,37 @@ Create comprehensive user-facing documentation, working examples, visual diagram
   - [x] Defining quality gates
   - [x] Agent configuration
 
-- [ ] Create HOW_TO_DEFINE_BOUNDARIES.md:
-  - [ ] Layer architecture setup
-  - [ ] Defining layers
-  - [ ] Setting import rules
-  - [ ] Testing boundaries
-  - [ ] Common patterns
-  - [ ] Troubleshooting
+- [x] Create HOW_TO_DEFINE_BOUNDARIES.md:
+  - [x] Layer architecture setup
+  - [x] Defining layers
+  - [x] Setting import rules
+  - [x] Testing boundaries
+  - [x] Common patterns
+  - [x] Troubleshooting
 
-- [ ] Create HOW_TO_MANAGE_WAIVERS.md:
-  - [ ] Creating waiver requests
-  - [ ] Approval process
-  - [ ] Tracking waivers
-  - [ ] Expiring waivers
-  - [ ] Best practices
-  - [ ] Waiver abuse prevention
+- [x] Create HOW_TO_MANAGE_WAIVERS.md:
+  - [x] Creating waiver requests
+  - [x] Approval process
+  - [x] Tracking waivers
+  - [x] Expiring waivers
+  - [x] Best practices
+  - [x] Waiver abuse prevention
 
-- [ ] Create HOW_TO_WORK_WITH_AGENTS.md:
-  - [ ] Agent setup
-  - [ ] Defining agent roles
-  - [ ] Agent permissions
-  - [ ] Monitoring agent actions
-  - [ ] HITL escalation
-  - [ ] Troubleshooting agents
+- [x] Create HOW_TO_WORK_WITH_AGENTS.md:
+  - [x] Agent setup
+  - [x] Defining agent roles
+  - [x] Agent permissions
+  - [x] Monitoring agent actions
+  - [x] HITL escalation
+  - [x] Troubleshooting agents
 
-- [ ] Create HOW_TO_INTEGRATE_CI_CD.md:
-  - [ ] GitHub Actions setup
-  - [ ] GitLab CI setup
-  - [ ] CircleCI setup
-  - [ ] Jenkins setup
-  - [ ] Azure Pipelines setup
-  - [ ] Custom CI/CD integration
+- [x] Create HOW_TO_INTEGRATE_CI_CD.md:
+  - [x] GitHub Actions setup
+  - [x] GitLab CI setup
+  - [x] CircleCI setup
+  - [x] Jenkins setup
+  - [x] Azure Pipelines setup
+  - [x] Custom CI/CD integration
 
 #### 1.3 Reference Documentation
 - [ ] Create docs/reference/ folder
@@ -522,10 +522,10 @@ Create comprehensive user-facing documentation, working examples, visual diagram
 
 **Completed:**
 - Task 1.1: Getting Started Guides (4 guides, 45.8 KB) ✅
-- Task 1.2: How-To Guides (2 of 6 guides, 27.5 KB) 🚧
+- Task 1.2: How-To Guides (6 guides, 84.5 KB) ✅
 
 **In Progress:**
-- Task 1.2: How-To Guides (4 remaining)
+- Task 1.3: Reference Documentation (starting next)
 
 **Not Started:**
 - Task 1.3: Reference Documentation
