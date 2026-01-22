@@ -1,0 +1,25 @@
+# Source files
+src/
+tsconfig.json
+
+# Tests
+tests/
+*.test.ts
+*.spec.ts
+jest.config.js
+
+# Development files
+.eslintrc.json
+.prettierrc.json
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Other
+.DS_Store
+.github/
