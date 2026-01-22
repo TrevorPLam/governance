@@ -311,13 +311,99 @@ You've successfully injected governance when:
 
 ---
 
+## Tier 2 Features (Optional - Enhanced Governance)
+
+The basic injection above gives you Tier 1 (Minimal) governance. For enhanced governance with agent framework and templates, follow these additional steps:
+
+### What's in Tier 2?
+
+Tier 2 adds:
+- **Agent Framework** (10+ files) - Rules and guidelines for AI agents
+- **Document Templates** (7 files) - ADR, RFC, Runbook, Waiver templates
+- **Documentation Standards** (7 files) - Standards for documentation, ADRs, API docs, style
+- **Folder Guides** (4 files) - AGENT.md guides for different folders
+
+**Time to add Tier 2:** Additional 10-15 minutes
+
+### Step 1: Review Agent Framework
+
+The agent framework is already in your `.repo/agents/` folder. Key files:
+
+1. **`.repo/agents/AGENTS.md`** - Core rules for how agents operate
+2. **`.repo/agents/capabilities.md`** - What agents can do
+3. **`.repo/agents/roles/`** - Different agent roles (primary, secondary, reviewer, release)
+
+**Action:** Read `.repo/agents/AGENTS.md` to understand agent operations.
+
+### Step 2: Explore Document Templates
+
+Templates are in `.repo/templates/`. Key templates:
+
+- **ADR_TEMPLATE.md** - For architecture decisions (required for dependencies, API changes, etc.)
+- **WAIVER_TEMPLATE.md** - For requesting policy exceptions
+- **RFC_TEMPLATE.md** - For proposing significant changes
+- **RUNBOOK_TEMPLATE.md** - For operational procedures
+
+**Action:** Review templates to understand when to use each.
+
+### Step 3: Add Folder-Level Agent Guides (Optional)
+
+Sample folder guides are in `templates/sample-agent-guides/`. Copy relevant ones to your folders:
+
+```bash
+# For src/ folder
+cp templates/sample-agent-guides/AGENT-src.md src/AGENT.md
+
+# For tests/ folder
+cp templates/sample-agent-guides/AGENT-tests.md tests/AGENT.md
+
+# For docs/ folder
+cp templates/sample-agent-guides/AGENT-docs.md docs/AGENT.md
+```
+
+**Then customize** each AGENT.md for your specific folder structure and requirements.
+
+### Step 4: Review Documentation Standards
+
+Documentation standards are in `.repo/docs/standards/`:
+
+- **documentation.md** - How to document code
+- **adr.md** - When and how to create ADRs
+- **api.md** - API documentation requirements
+- **style.md** - Code style standards
+
+**Action:** Share relevant standards with your team.
+
+### Step 5: Create Your First ADR (Optional)
+
+Practice using the ADR template:
+
+1. Copy template: `cp .repo/templates/ADR_TEMPLATE.md .repo/docs/adr/0002-example-decision.md`
+2. Fill in a real architectural decision from your project
+3. Review with team
+4. Commit when finalized
+
+### Tier 2 Success Criteria
+
+You've successfully added Tier 2 when:
+
+- [x] Reviewed agent framework files
+- [x] Understand when to use each template
+- [x] Added folder-level AGENT.md guides (optional)
+- [x] Team knows about documentation standards
+- [x] Created at least one ADR (optional but recommended)
+
+---
+
 ## Next Steps After Injection
 
 1. **Educate the Team**: Have everyone read `.repo/GOVERNANCE.md` and the CONSTITUTION
 2. **Start Using TODOs**: Begin tracking work in P0/P1/P2 TODO files
-3. **Integrate with CI**: Add manifest commands to your CI/CD pipelines (Phase 3)
-4. **Review Periodically**: Monthly review of HITL items and waivers
-5. **Consider Automation**: When ready, explore the CLI tool (Phase 3) for easier management
+3. **Create ADRs**: When making significant decisions, create ADRs using the template
+4. **Use Templates**: Use document templates for waivers, runbooks, RFCs
+5. **Integrate with CI**: Add manifest commands to your CI/CD pipelines (Phase 3)
+6. **Review Periodically**: Monthly review of HITL items and waivers
+7. **Consider Automation**: When ready, explore the CLI tool (Phase 3) for easier management
 
 ---
 
