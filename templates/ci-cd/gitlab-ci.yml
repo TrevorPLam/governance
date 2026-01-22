@@ -1,0 +1,78 @@
+# GitLab CI/CD Configuration for Governance
+# Copy this file to your project as .gitlab-ci.yml
+
+stages:
+  - validate
+  - test
+  - security
+  - build
+  - deploy
+
+variables:
+  NODE_VERSION: "18"
+  MINIMUM_COVERAGE: "70"
+
+cache:
+  paths:
+    - node_modules/
+    - .npm/
+
+.node_setup:
+  image: node:${NODE_VERSION}
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+    - npm install -g @trevorplam/governance-cli
+
+governance:validate:
+  extends: .node_setup
+  stage: validate
+  script:
+    - governance-cli validate --verbose
+    - governance-cli verify --profile=quick
+  only:
+    - merge_requests
+    - main
+    - develop
+
+quality:test:
+  extends: .node_setup
+  stage: test
+  script:
+    - npm test -- --coverage --ci
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    paths:
+      - coverage/
+    expire_in: 30 days
+  only:
+    - merge_requests
+    - main
+
+quality:build:
+  extends: .node_setup
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+  only:
+    - merge_requests
+    - main
+    - tags
+
+security:dependencies:
+  extends: .node_setup
+  stage: security
+  script:
+    - npm audit --audit-level=moderate
+  allow_failure: true
+  only:
+    - merge_requests
+    - main
+    - schedules

@@ -1,0 +1,110 @@
+name: 'Quality Check'
+description: 'Runs quality checks: linting, tests, coverage, build'
+inputs:
+  minimum-coverage:
+    description: 'Minimum code coverage percentage'
+    required: false
+    default: '70'
+  skip-build:
+    description: 'Skip build step'
+    required: false
+    default: 'false'
+
+outputs:
+  coverage:
+    description: 'Code coverage percentage'
+    value: ${{ steps.coverage.outputs.percentage }}
+  all-passed:
+    description: 'Whether all quality checks passed'
+    value: ${{ steps.summary.outputs.passed }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run Linter
+      id: lint
+      shell: bash
+      continue-on-error: true
+      run: |
+        if npm run lint; then
+          echo "✅ Linting passed"
+          echo "result=pass" >> $GITHUB_OUTPUT
+        else
+          echo "❌ Linting failed"
+          echo "result=fail" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Run Tests
+      id: test
+      shell: bash
+      continue-on-error: true
+      run: |
+        if npm test -- --coverage --ci; then
+          echo "✅ Tests passed"
+          echo "result=pass" >> $GITHUB_OUTPUT
+        else
+          echo "❌ Tests failed"
+          echo "result=fail" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Check Coverage
+      id: coverage
+      shell: bash
+      run: |
+        if [ -f coverage/coverage-summary.json ]; then
+          COVERAGE=$(node -pe "JSON.parse(require('fs').readFileSync('coverage/coverage-summary.json')).total.lines.pct")
+          echo "Coverage: ${COVERAGE}%"
+          echo "percentage=${COVERAGE}" >> $GITHUB_OUTPUT
+          
+          if (( $(echo "$COVERAGE < ${{ inputs.minimum-coverage }}" | bc -l) )); then
+            echo "❌ Coverage ${COVERAGE}% below minimum ${{ inputs.minimum-coverage }}%"
+            echo "result=fail" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Coverage ${COVERAGE}% meets minimum ${{ inputs.minimum-coverage }}%"
+            echo "result=pass" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "⚠️ No coverage report found"
+          echo "percentage=0" >> $GITHUB_OUTPUT
+          echo "result=unknown" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Build Project
+      if: inputs.skip-build != 'true'
+      id: build
+      shell: bash
+      continue-on-error: true
+      run: |
+        if npm run build; then
+          echo "✅ Build passed"
+          echo "result=pass" >> $GITHUB_OUTPUT
+        else
+          echo "❌ Build failed"
+          echo "result=fail" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Quality Check Summary
+      id: summary
+      shell: bash
+      run: |
+        echo "## Quality Check Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- Lint: ${{ steps.lint.outputs.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Tests: ${{ steps.test.outputs.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Coverage: ${{ steps.coverage.outputs.percentage }}% (min: ${{ inputs.minimum-coverage }}%)" >> $GITHUB_STEP_SUMMARY
+        echo "- Build: ${{ steps.build.outputs.result }}" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "${{ steps.lint.outputs.result }}" = "pass" ] && \
+           [ "${{ steps.test.outputs.result }}" = "pass" ] && \
+           [ "${{ steps.coverage.outputs.result }}" = "pass" ] && \
+           [ "${{ steps.build.outputs.result }}" = "pass" ]; then
+          echo "passed=true" >> $GITHUB_OUTPUT
+          echo "✅ All quality checks passed"
+        else
+          echo "passed=false" >> $GITHUB_OUTPUT
+          echo "❌ Some quality checks failed"
+          exit 1
+        fi
+
+branding:
+  icon: 'check-square'
+  color: 'purple'

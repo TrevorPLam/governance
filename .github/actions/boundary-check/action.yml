@@ -1,0 +1,52 @@
+name: 'Boundary Check'
+description: 'Validates architectural boundaries and dependencies'
+inputs:
+  fail-on-violation:
+    description: 'Fail the build if boundary violations are detected'
+    required: false
+    default: 'true'
+
+outputs:
+  violations-found:
+    description: 'Number of boundary violations found'
+    value: ${{ steps.check.outputs.violations }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Check Boundaries
+      id: check
+      shell: bash
+      run: |
+        if [ ! -f .repo/repo.manifest.yaml ]; then
+          echo "⚠️ No governance manifest found"
+          echo "violations=0" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        
+        # Run boundary verification
+        if governance-cli verify --profile=boundaries > boundary-report.txt 2>&1; then
+          echo "✅ No boundary violations detected"
+          echo "violations=0" >> $GITHUB_OUTPUT
+        else
+          VIOLATIONS=$(grep -c "violation" boundary-report.txt || echo "0")
+          echo "❌ Found ${VIOLATIONS} boundary violations"
+          cat boundary-report.txt
+          echo "violations=${VIOLATIONS}" >> $GITHUB_OUTPUT
+          
+          if [ "${{ inputs.fail-on-violation }}" = "true" ]; then
+            exit 1
+          fi
+        fi
+    
+    - name: Upload Boundary Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: boundary-check-report
+        path: boundary-report.txt
+        retention-days: 30
+
+branding:
+  icon: 'shield'
+  color: 'blue'

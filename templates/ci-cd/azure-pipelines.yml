@@ -1,0 +1,216 @@
+# Azure Pipelines Configuration for Governance
+# Copy this file to your project root as azure-pipelines.yml
+
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+  tags:
+    include:
+      - v*
+
+pr:
+  branches:
+    include:
+      - main
+      - develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  NODE_VERSION: '18.x'
+  MINIMUM_COVERAGE: 70
+
+stages:
+  - stage: Validate
+    displayName: 'Governance Validation'
+    jobs:
+      - job: ValidateGovernance
+        displayName: 'Validate Governance Configuration'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+            displayName: 'Install Node.js'
+          
+          - script: |
+              npm ci
+              npm install -g @trevorplam/governance-cli
+            displayName: 'Install Dependencies'
+          
+          - script: governance-cli validate --verbose
+            displayName: 'Validate Governance'
+          
+          - script: governance-cli verify --profile=quick
+            displayName: 'Quick Verification'
+
+  - stage: Quality
+    displayName: 'Quality Checks'
+    dependsOn: Validate
+    jobs:
+      - job: Lint
+        displayName: 'Linting'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+            displayName: 'Install Node.js'
+          
+          - script: npm ci
+            displayName: 'Install Dependencies'
+          
+          - script: npm run lint
+            displayName: 'Run Linter'
+      
+      - job: Test
+        displayName: 'Testing'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+            displayName: 'Install Node.js'
+          
+          - script: npm ci
+            displayName: 'Install Dependencies'
+          
+          - script: npm test -- --coverage --ci
+            displayName: 'Run Tests with Coverage'
+          
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFiles: 'test-results/**/*.xml'
+              testRunTitle: 'Unit Tests'
+            displayName: 'Publish Test Results'
+          
+          - task: PublishCodeCoverageResults@1
+            condition: succeededOrFailed()
+            inputs:
+              codeCoverageTool: 'Cobertura'
+              summaryFileLocation: 'coverage/cobertura-coverage.xml'
+              reportDirectory: 'coverage'
+            displayName: 'Publish Coverage Results'
+          
+          - script: |
+              if [ -f coverage/coverage-summary.json ]; then
+                COVERAGE=$(node -pe "JSON.parse(require('fs').readFileSync('coverage/coverage-summary.json')).total.lines.pct")
+                echo "Coverage: ${COVERAGE}%"
+                if (( $(echo "$COVERAGE < $MINIMUM_COVERAGE" | bc -l) )); then
+                  echo "##vso[task.logissue type=error]Coverage ${COVERAGE}% below minimum ${MINIMUM_COVERAGE}%"
+                  exit 1
+                fi
+              fi
+            displayName: 'Check Coverage Threshold'
+      
+      - job: Build
+        displayName: 'Build'
+        dependsOn: [Lint, Test]
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+            displayName: 'Install Node.js'
+          
+          - script: npm ci
+            displayName: 'Install Dependencies'
+          
+          - script: npm run build
+            displayName: 'Build Project'
+          
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: 'dist'
+              artifactName: 'build-output'
+            displayName: 'Publish Build Artifacts'
+
+  - stage: Security
+    displayName: 'Security Scanning'
+    dependsOn: Validate
+    jobs:
+      - job: SecurityScans
+        displayName: 'Security Scans'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+            displayName: 'Install Node.js'
+          
+          - script: npm ci
+            displayName: 'Install Dependencies'
+          
+          - script: npm audit --audit-level=moderate
+            continueOnError: true
+            displayName: 'Dependency Audit'
+          
+          - script: |
+              PATTERNS="(password|secret|api[_-]?key|token|credential).*=.*['\"]"
+              if grep -r -i -E "$PATTERNS" . \
+                 --exclude-dir=node_modules \
+                 --exclude-dir=.git \
+                 --exclude-dir=dist; then
+                echo "##vso[task.logissue type=error]Potential secrets found"
+                exit 1
+              fi
+            displayName: 'Secret Detection'
+
+  - stage: FullVerification
+    displayName: 'Full Governance Verification'
+    dependsOn: [Quality, Security]
+    condition: and(succeeded(), in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/develop'))
+    jobs:
+      - job: FullVerify
+        displayName: 'Thorough Verification'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+            displayName: 'Install Node.js'
+          
+          - script: |
+              npm ci
+              npm install -g @trevorplam/governance-cli
+            displayName: 'Install Dependencies'
+          
+          - script: governance-cli verify --profile=thorough
+            displayName: 'Full Governance Verification'
+
+  - stage: Release
+    displayName: 'Release'
+    dependsOn: FullVerification
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+    jobs:
+      - job: CreateRelease
+        displayName: 'Create Release'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+            displayName: 'Install Node.js'
+          
+          - script: npm ci
+            displayName: 'Install Dependencies'
+          
+          - script: npm run build
+            displayName: 'Build for Release'
+          
+          - task: GitHubRelease@1
+            inputs:
+              gitHubConnection: 'github-connection'
+              repositoryName: '$(Build.Repository.Name)'
+              action: 'create'
+              target: '$(Build.SourceVersion)'
+              tagSource: 'gitTag'
+              assets: 'dist/**/*'
+              changeLogCompareToRelease: 'lastFullRelease'
+              changeLogType: 'commitBased'
+            displayName: 'Create GitHub Release'
+
+schedules:
+  - cron: "0 2 * * *"
+    displayName: Daily security scan
+    branches:
+      include:
+        - main
+    always: true

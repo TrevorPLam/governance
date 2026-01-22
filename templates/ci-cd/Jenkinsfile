@@ -1,0 +1,181 @@
+// Jenkinsfile for Governance CI/CD
+// Copy this file to your project root as Jenkinsfile
+
+pipeline {
+    agent {
+        docker {
+            image 'node:18'
+            args '-u root:root'
+        }
+    }
+    
+    environment {
+        NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
+        MINIMUM_COVERAGE = '70'
+    }
+    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps()
+    }
+    
+    stages {
+        stage('Setup') {
+            steps {
+                script {
+                    echo 'Installing dependencies...'
+                    sh 'npm ci'
+                    sh 'npm install -g @trevorplam/governance-cli'
+                }
+            }
+        }
+        
+        stage('Validate Governance') {
+            steps {
+                script {
+                    echo 'Validating governance configuration...'
+                    sh 'governance-cli validate --verbose'
+                }
+            }
+        }
+        
+        stage('Quality Checks') {
+            parallel {
+                stage('Lint') {
+                    steps {
+                        script {
+                            echo 'Running linter...'
+                            sh 'npm run lint'
+                        }
+                    }
+                }
+                
+                stage('Test') {
+                    steps {
+                        script {
+                            echo 'Running tests with coverage...'
+                            sh 'npm test -- --coverage --ci'
+                            
+                            // Publish test results
+                            junit 'test-results/**/*.xml'
+                            
+                            // Publish coverage report
+                            publishHTML([
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: true,
+                                keepAll: true,
+                                reportDir: 'coverage/lcov-report',
+                                reportFiles: 'index.html',
+                                reportName: 'Coverage Report'
+                            ])
+                        }
+                    }
+                }
+                
+                stage('Check Boundaries') {
+                    steps {
+                        script {
+                            echo 'Checking architectural boundaries...'
+                            sh 'governance-cli verify --profile=boundaries'
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Check Coverage') {
+            steps {
+                script {
+                    echo 'Checking coverage threshold...'
+                    sh '''
+                        if [ -f coverage/coverage-summary.json ]; then
+                            COVERAGE=$(node -pe "JSON.parse(require('fs').readFileSync('coverage/coverage-summary.json')).total.lines.pct")
+                            echo "Coverage: ${COVERAGE}%"
+                            if (( $(echo "$COVERAGE < $MINIMUM_COVERAGE" | bc -l) )); then
+                                echo "Coverage ${COVERAGE}% below minimum ${MINIMUM_COVERAGE}%"
+                                exit 1
+                            fi
+                        fi
+                    '''
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script {
+                    echo 'Building project...'
+                    sh 'npm run build'
+                }
+            }
+        }
+        
+        stage('Security Scan') {
+            parallel {
+                stage('Dependency Audit') {
+                    steps {
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                            script {
+                                echo 'Running dependency audit...'
+                                sh 'npm audit --audit-level=moderate'
+                            }
+                        }
+                    }
+                }
+                
+                stage('Secret Detection') {
+                    steps {
+                        script {
+                            echo 'Scanning for secrets...'
+                            sh '''
+                                PATTERNS="(password|secret|api[_-]?key|token|credential).*=.*['\\\"]"
+                                if grep -r -i -E "$PATTERNS" . \
+                                   --exclude-dir=node_modules \
+                                   --exclude-dir=.git \
+                                   --exclude-dir=dist; then
+                                    echo "Potential secrets found!"
+                                    exit 1
+                                fi
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Full Verification') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'develop'
+                }
+            }
+            steps {
+                script {
+                    echo 'Running full governance verification...'
+                    sh 'governance-cli verify --profile=thorough'
+                }
+            }
+        }
+        
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts artifacts: 'dist/**/*', allowEmptyArchive: true
+                archiveArtifacts artifacts: 'coverage/**/*', allowEmptyArchive: true
+            }
+        }
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}

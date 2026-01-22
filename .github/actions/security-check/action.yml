@@ -1,0 +1,102 @@
+name: 'Security Check'
+description: 'Performs security scans: dependencies, secrets, SAST'
+inputs:
+  block-on-critical:
+    description: 'Block on critical vulnerabilities'
+    required: false
+    default: 'true'
+  block-on-high:
+    description: 'Block on high vulnerabilities'
+    required: false
+    default: 'false'
+
+outputs:
+  critical-count:
+    description: 'Number of critical vulnerabilities'
+    value: ${{ steps.audit.outputs.critical }}
+  high-count:
+    description: 'Number of high vulnerabilities'
+    value: ${{ steps.audit.outputs.high }}
+  secrets-found:
+    description: 'Whether secrets were found'
+    value: ${{ steps.secrets.outputs.found }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Dependency Audit
+      id: audit
+      shell: bash
+      continue-on-error: true
+      run: |
+        npm audit --audit-level=moderate --json > npm-audit.json || true
+        
+        CRITICAL=$(cat npm-audit.json | jq '.metadata.vulnerabilities.critical // 0')
+        HIGH=$(cat npm-audit.json | jq '.metadata.vulnerabilities.high // 0')
+        
+        echo "critical=${CRITICAL}" >> $GITHUB_OUTPUT
+        echo "high=${HIGH}" >> $GITHUB_OUTPUT
+        
+        echo "Critical vulnerabilities: ${CRITICAL}"
+        echo "High vulnerabilities: ${HIGH}"
+        
+        if [ "$CRITICAL" -gt 0 ] && [ "${{ inputs.block-on-critical }}" = "true" ]; then
+          echo "❌ Critical vulnerabilities found"
+          echo "result=critical" >> $GITHUB_OUTPUT
+          exit 1
+        elif [ "$HIGH" -gt 0 ] && [ "${{ inputs.block-on-high }}" = "true" ]; then
+          echo "⚠️ High vulnerabilities found"
+          echo "result=high" >> $GITHUB_OUTPUT
+          exit 1
+        else
+          echo "✅ No blocking vulnerabilities"
+          echo "result=pass" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Secret Detection
+      id: secrets
+      shell: bash
+      continue-on-error: true
+      run: |
+        # Simple secret detection using grep patterns
+        PATTERNS="(password|secret|api[_-]?key|token|credential).*=.*['\"]"
+        
+        if grep -r -i -E "$PATTERNS" . \
+           --exclude-dir=node_modules \
+           --exclude-dir=.git \
+           --exclude-dir=dist \
+           --exclude-dir=coverage \
+           --exclude="*.lock" > potential-secrets.txt 2>/dev/null; then
+          
+          COUNT=$(wc -l < potential-secrets.txt)
+          echo "⚠️ Found ${COUNT} potential secrets"
+          echo "found=true" >> $GITHUB_OUTPUT
+          echo "count=${COUNT}" >> $GITHUB_OUTPUT
+          head -20 potential-secrets.txt
+        else
+          echo "✅ No secrets detected"
+          echo "found=false" >> $GITHUB_OUTPUT
+          echo "count=0" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Security Summary
+      shell: bash
+      run: |
+        echo "## Security Check Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- Critical vulnerabilities: ${{ steps.audit.outputs.critical }}" >> $GITHUB_STEP_SUMMARY
+        echo "- High vulnerabilities: ${{ steps.audit.outputs.high }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Potential secrets: ${{ steps.secrets.outputs.count }}" >> $GITHUB_STEP_SUMMARY
+    
+    - name: Upload Security Reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-check-report
+        path: |
+          npm-audit.json
+          potential-secrets.txt
+        retention-days: 30
+
+branding:
+  icon: 'lock'
+  color: 'red'
