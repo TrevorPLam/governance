@@ -1,153 +1,281 @@
-# Phase 2: Core Framework TODO (Weeks 3-4)
-## Priority: 🔴 High | Timeline: 2 weeks | Effort: Medium
+# Phase 2: Standard Framework - Add Agent System & Templates (Weeks 3-4)
+## Priority: 🟡 Medium | Timeline: 2 weeks | Effort: Medium
 
 ---
 
 ## Overview
-Build the complete `.repo/` framework that will be used by target repositories. This phase implements the governance policies, agent framework, templates, and manifest system that forms the core of the AI-Native governance system.
+Expand the injectable template from Phase 1 (Tier 1: Minimal) to Tier 2 (Standard) by adding the agent framework, document templates, and documentation structure. This phase makes governance more powerful while still keeping manual injection possible.
+
+**Prerequisites:** Phase 1 complete (Tier 1 template working)
+
+**🎯 MILESTONE:** After completing this phase, you have a "Standard" governance package that includes agent guidelines, templates for ADRs/waivers, and complete documentation structure.
 
 ---
 
 ## 📋 Tasks
 
-### 1. Create .repo/ Policy Framework
-**Goal:** Establish authoritative governance rules
+### 1. Build Agent Framework (From Phase 4 Specs)
+**Goal:** Add agent operation guidelines and roles
 
-- [ ] Create .repo/policy/ folder structure
-- [ ] Create CONSTITUTION.md:
-  - [ ] Define immutable core principles
-  - [ ] Establish authority chain
-  - [ ] Document amendment process
-  - [ ] Define scope and boundaries
-  - [ ] Include enforcement mechanisms
+- [ ] Create `templates/.repo/agents/AGENTS.md`:
+  - [ ] Copy core rules from `00. Implementation/phase4.md`
+  - [ ] Add VERSION marker: `<!-- GOVERNANCE: UPDATEABLE - Layer 2 -->`
+  - [ ] Document three-pass code generation
+  - [ ] Explain UNKNOWN workflow
+  - [ ] Include filepath requirements
+  - [ ] Add boundary enforcement rules
 
-- [ ] Create PRINCIPLES.md:
-  - [ ] Document all 25 operating principles (P1-P25)
-  - [ ] Add detailed explanations for each
-  - [ ] Include examples for each principle
-  - [ ] Add rationale for each principle
-  - [ ] Cross-reference related principles
-  - [ ] Include violation examples
+- [ ] Create `templates/.repo/agents/capabilities.md`:
+  - [ ] List standard capabilities (create_feature, modify_existing, etc.)
+  - [ ] Add VERSION marker: `<!-- GOVERNANCE: UPDATEABLE - Layer 2 -->`
+  - [ ] Document capability levels
+  - [ ] Include restrictions
 
-- [ ] Create QUALITY_GATES.md:
-  - [ ] Define merge policies
-  - [ ] Document coverage requirements
-  - [ ] Establish code quality standards
-  - [ ] Define review requirements
-  - [ ] Document budget constraints (token, time, complexity)
-  - [ ] Add escalation procedures
-
-- [ ] Create SECURITY_BASELINE.md:
-  - [ ] List security requirements
-  - [ ] Document forbidden patterns
-  - [ ] Define secure coding standards
-  - [ ] Include vulnerability management process
-  - [ ] Add security testing requirements
-  - [ ] Document secret management rules
-  - [ ] Define dependency security policies
-
-- [ ] Create BOUNDARIES.md:
-  - [ ] Define layer model architecture
-  - [ ] Document import rules by layer
-  - [ ] Establish dependency boundaries
-  - [ ] Include architectural patterns
-  - [ ] Add boundary violation examples
-  - [ ] Define cross-layer communication rules
-
-- [ ] Create HITL.md:
-  - [ ] Document human-in-the-loop triggers
-  - [ ] Define escalation criteria
-  - [ ] Establish notification procedures
-  - [ ] Include decision authority matrix
-  - [ ] Add HITL log template
-  - [ ] Document resolution tracking
-
-- [ ] Create WAIVERS.md:
-  - [ ] Define waiver governance rules
-  - [ ] Document approval process
-  - [ ] Establish temporary vs. permanent waivers
-  - [ ] Include waiver template
-  - [ ] Add tracking and expiration rules
-  - [ ] Define review cadence
-
-### 2. Create repo.manifest.yaml Template
-**Goal:** Source of truth for command resolution
-
-- [ ] Design manifest structure:
-  - [ ] Define metadata section (name, version, owner)
-  - [ ] Create commands section with examples
-  - [ ] Add boundaries section
-  - [ ] Include quality_gates section
-  - [ ] Define agents section
-  - [ ] Add integrations section
-  - [ ] Include custom_rules section
-
-- [ ] Create comprehensive example manifest:
-  - [ ] Add realistic project metadata
-  - [ ] Include common commands (build, test, lint, deploy)
-  - [ ] Define layer boundaries
-  - [ ] Set quality gate thresholds
-  - [ ] Configure agent roles
-  - [ ] Add integration configurations
-
-- [ ] Document manifest schema:
-  - [ ] Create JSON schema for validation
-  - [ ] Document all required fields
-  - [ ] Document optional fields
-  - [ ] Include field descriptions
-  - [ ] Add validation rules
-  - [ ] Provide examples for each section
-
-- [ ] Create manifest documentation:
-  - [ ] Write .repo/docs/MANIFEST_GUIDE.md
-  - [ ] Explain manifest purpose
-  - [ ] Document how to customize
-  - [ ] Include migration guide
-  - [ ] Add troubleshooting section
-
-### 3. Create Agent Framework
-**Goal:** Define agent roles and capabilities
-
-- [ ] Create .repo/agents/ folder structure
-- [ ] Create AGENTS.md:
-  - [ ] Define core agent rules
-  - [ ] Document agent execution model (three-pass)
-  - [ ] Establish agent boundaries
-  - [ ] Define agent success criteria
-  - [ ] Include agent logging requirements
-  - [ ] Add escalation procedures
-
-- [ ] Create capabilities.md:
-  - [ ] Document agent capability taxonomy
-  - [ ] Define capability levels (read, write, execute, review)
-  - [ ] List standard capabilities
-  - [ ] Include capability restrictions
-  - [ ] Add capability request process
-
-- [ ] Create role definitions:
-  - [ ] Create roles/primary.md:
+- [ ] Create agent role files in `templates/.repo/agents/roles/`:
+  - [ ] Create `primary.md`:
     - [ ] Define primary agent permissions
     - [ ] List allowed operations
     - [ ] Document restrictions
-    - [ ] Include examples
-  
-  - [ ] Create roles/secondary.md:
+  - [ ] Create `secondary.md`:
     - [ ] Define secondary agent permissions
-    - [ ] List allowed operations
-    - [ ] Document restrictions
-    - [ ] Include escalation rules
-  
-  - [ ] Create roles/reviewer.md:
+    - [ ] Document escalation rules
+  - [ ] Create `reviewer.md`:
     - [ ] Define human reviewer role
     - [ ] List review responsibilities
-    - [ ] Document approval authority
-    - [ ] Include review checklist
-  
-  - [ ] Create roles/release.md:
+  - [ ] Create `release.md`:
     - [ ] Define release manager role
-    - [ ] List release responsibilities
     - [ ] Document deployment authority
-    - [ ] Include release checklist
+
+- [ ] Create agent prompts in `templates/.repo/agents/prompts/`:
+  - [ ] Create `task_packet.md`:
+    - [ ] Add VERSION marker: `<!-- GOVERNANCE: CUSTOM - Layer 1 -->`
+    - [ ] Include JSON template structure
+    - [ ] Document required fields
+  - [ ] Create `pr_template.md`:
+    - [ ] Add VERSION marker: `<!-- GOVERNANCE: CUSTOM - Layer 1 -->`
+    - [ ] Include PR structure template
+    - [ ] Document evidence requirements
+
+- [ ] Create checklists in `templates/.repo/agents/checklists/`:
+  - [ ] Create `change-plan.md`:
+    - [ ] Add VERSION marker: `<!-- GOVERNANCE: UPDATEABLE - Layer 3 -->`
+    - [ ] List planning checklist items
+  - [ ] Create `pr-review.md`:
+    - [ ] List review checklist items
+  - [ ] Create `incident.md`:
+    - [ ] List incident response checklist
+
+### 2. Build Document Templates (From Phase 6 Specs)
+**Goal:** Create templates for ADRs, waivers, logs, etc.
+
+- [ ] Create `templates/.repo/templates/AGENT_LOG_TEMPLATE.md`:
+  - [ ] Copy structure from `00. Implementation/phase6.md`
+  - [ ] Add VERSION marker: `<!-- GOVERNANCE: UPDATEABLE - Layer 3 -->`
+  - [ ] Include JSON template format
+  - [ ] Document required fields
+
+- [ ] Create `templates/.repo/templates/AGENT_TRACE_SCHEMA.json`:
+  - [ ] Copy schema from phase6.md
+  - [ ] Add version field
+  - [ ] Include validation rules
+
+- [ ] Create `templates/.repo/templates/WAIVER_TEMPLATE.md`:
+  - [ ] Include waiver structure
+  - [ ] Add VERSION marker: `<!-- GOVERNANCE: UPDATEABLE - Layer 3 -->`
+  - [ ] Document expiration field
+  - [ ] Include remediation plan section
+
+- [ ] Create `templates/.repo/templates/ADR_TEMPLATE.md`:
+  - [ ] Include ADR structure (context, decision, consequences)
+  - [ ] Add VERSION marker
+  - [ ] Document when to use
+
+- [ ] Create `templates/.repo/templates/RUNBOOK_TEMPLATE.md`:
+  - [ ] Include operational procedure structure
+  - [ ] Add rollback section
+  - [ ] Document verification steps
+
+- [ ] Create `templates/.repo/templates/RFC_TEMPLATE.md`:
+  - [ ] Include proposal structure
+  - [ ] Add alternatives section
+  - [ ] Document impact assessment
+
+- [ ] Create `templates/.repo/templates/PR_TEMPLATE.md`:
+  - [ ] Include PR structure
+  - [ ] Add evidence section
+  - [ ] Document HITL requirements
+### 3. Build Documentation Structure (From Phase 8 Specs)
+**Goal:** Create documentation framework
+
+- [ ] Create `templates/.repo/docs/DOCS_INDEX.md`:
+  - [ ] List all documentation in .repo/
+  - [ ] Add VERSION marker: `<!-- GOVERNANCE: UPDATEABLE - Layer 2 -->`
+  - [ ] Organize by category (Start Here, Standards, ADR History)
+  - [ ] Include navigation guidance
+
+- [ ] Create standards in `templates/.repo/docs/standards/`:
+  - [ ] Create `documentation.md`:
+    - [ ] Document docs-age-with-code principle
+    - [ ] Add VERSION marker: `<!-- GOVERNANCE: UPDATEABLE - Layer 2 -->`
+    - [ ] Include filepath requirements
+  - [ ] Create `adr.md`:
+    - [ ] Document when ADRs are required
+    - [ ] Reference ADR_TEMPLATE
+    - [ ] List triggers (dependencies, api-contract, schema, etc.)
+  - [ ] Create `api.md`:
+    - [ ] Document API documentation requirements
+    - [ ] Include contract change rules
+  - [ ] Create `style.md`:
+    - [ ] Document naming conventions
+    - [ ] Include clarity requirements
+    - [ ] Reference P15: Consistency Beats Novelty
+
+- [ ] Create ADR scaffold in `templates/.repo/docs/adr/`:
+  - [ ] Create `README.md`:
+    - [ ] Explain ADR system
+    - [ ] Add VERSION marker: `<!-- GOVERNANCE: CUSTOM - Layer 1 -->`
+    - [ ] Include sequential numbering guidance
+  - [ ] Create `0001-example.md`:
+    - [ ] Provide example ADR
+    - [ ] Show proper format
+    - [ ] Include all required sections
+
+### 4. Add Folder-Level AGENT.md Guides (From Phase 4 Specs)
+**Goal:** Place governance guides in key folders
+
+- [ ] Create `templates/.repo/AGENT.md`:
+  - [ ] Explain purpose of .repo/ folder
+  - [ ] Add VERSION marker: `<!-- GOVERNANCE: UPDATEABLE - Layer 2 -->`
+  - [ ] List what agents may/may not do
+  - [ ] Link to policy files
+
+- [ ] Create folder guide templates:
+  - [ ] Create `templates/sample-AGENT.md-for-src`:
+    - [ ] Template for src/ folder
+    - [ ] Include boundary rules
+    - [ ] Add allowed/forbidden sections
+  - [ ] Create `templates/sample-AGENT.md-for-tests`:
+    - [ ] Template for tests/ folder
+    - [ ] Include testing guidelines
+  - [ ] Create `templates/sample-AGENT.md-for-docs`:
+    - [ ] Template for docs/ folder
+    - [ ] Include documentation requirements
+
+### 5. Test Tier 2 Template
+**Goal:** Validate enhanced template works
+
+- [ ] Update test project from Phase 1
+- [ ] Copy new agent framework files
+- [ ] Copy new template files
+- [ ] Copy documentation structure
+- [ ] Verify all links work
+- [ ] Test creating a sample ADR
+- [ ] Test using task packet template
+- [ ] Document any issues
+
+### 6. Update Injection Guide
+**Goal:** Extend guide for Tier 2 features
+
+- [ ] Update `docs/injection-guide-manual.md`:
+  - [ ] Add section on agent framework
+  - [ ] Explain when to use templates
+  - [ ] Document ADR creation process
+  - [ ] Add HITL and waiver workflows
+  - [ ] Include folder-level AGENT.md setup
+  - [ ] Provide examples of customizing prompts
+
+---
+
+## 🎉 Phase 2 Complete - Milestone Reached!
+
+### ✅ Success Criteria
+- [ ] All agent framework files exist (10 files)
+- [ ] All 7 templates exist
+- [ ] Documentation structure is complete
+- [ ] Folder-level guides are ready
+- [ ] Successfully tested on sample project
+- [ ] Injection guide updated for Tier 2
+
+### 🚀 YOU NOW HAVE STANDARD GOVERNANCE PACKAGE!
+
+**What changed from Phase 1:**
+- **Phase 1 (Tier 1):** Just policies + manifest (10 files)
+- **Phase 2 (Tier 2):** + Agent framework + Templates + Docs (25 files)
+
+**How to inject (Still Manual):**
+1. Copy entire `templates/.repo/` folder (now 25 files)
+2. Copy TODO files
+3. Fill manifest as before
+4. Optionally customize agent prompts
+5. Use templates for ADRs, waivers, etc.
+
+**Time per injection:** ~40 minutes (10 min more than Tier 1)  
+**What you get:** Full governance with agent guidelines and templates  
+**Next:** Phase 3 builds CLI tool to automate injection (reduces to 5 minutes)
+
+---
+
+## 📊 Success Criteria
+
+- [ ] 10 agent framework files created
+- [ ] 7 document templates created
+- [ ] Documentation structure complete
+- [ ] Folder guides ready
+- [ ] Test project validated
+- [ ] Injection guide updated
+
+---
+
+## 📈 Key Deliverables
+
+1. **Agent Framework** - 10 files defining agent operations
+2. **Document Templates** - 7 templates (ADR, waiver, logs, etc.)
+3. **Documentation Structure** - Standards and ADR scaffold
+4. **Folder Guides** - AGENT.md templates for different folders
+5. **Updated Injection Guide** - Instructions for Tier 2 features
+6. **Working Tier 2 Test** - Validated on sample project
+
+---
+
+## 🔗 Dependencies
+
+**Prerequisites:**
+- Phase 1 complete (Tier 1 template working)
+- Test project from Phase 1
+
+**Enables:**
+- Phase 3: CLI automation
+- Richer governance in injected repos
+- ADR and waiver workflows
+
+---
+
+## ⚠️ Notes
+
+- Focus on Tier 2 (Standard) - 25 total files
+- Agent prompts are Layer 1 (customizable per project)
+- Templates are Layer 3 (can be updated safely)
+- Test thoroughly before moving to Phase 3
+- CLI in Phase 3 will automate this injection
+
+---
+
+## 📅 Timeline Breakdown
+
+**Week 3:**
+- Days 1-2: Build agent framework (10 files)
+- Days 3-4: Create document templates (7 files)
+- Day 5: Documentation structure
+
+**Week 4:**
+- Days 1-2: Folder-level guides + testing
+- Day 3: Update injection guide
+- Days 4-5: Validate, fix issues, polish
+
+---
+
+**Status:** NOT STARTED  
+**Last Updated:** 2026-01-22
 
 ### 4. Create Document Templates
 **Goal:** Standardized templates for all document types

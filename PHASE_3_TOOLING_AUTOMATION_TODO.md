@@ -1,203 +1,404 @@
-# Phase 3: Tooling & Automation TODO (Weeks 5-8)
+# Phase 3: Automation - Build CLI Tool (Weeks 5-8)
 ## Priority: 🔴 High | Timeline: 4 weeks | Effort: High
 
 ---
 
 ## Overview
-Build the CLI tool, boundary checker, governance verifier, and CI/CD templates that enable automated enforcement and validation of the governance framework. This phase transforms the framework from documentation into working tools.
+Build the `governance-cli` tool that automates template injection, validation, and verification. This phase transforms the manual copy-paste process (30 minutes) into a 5-minute automated process. After this phase, governance becomes truly easy to adopt at scale.
+
+**Prerequisites:** Phase 2 complete (Tier 2 template working)
+
+**🎯 MILESTONE:** After completing this phase, you can inject governance into repos in 5 minutes using `governance-cli init`. You can update all your governed repos with `governance-cli update`.
 
 ---
 
 ## 📋 Tasks
 
-### 1. CLI Tool Development
-**Goal:** Create comprehensive governance CLI tool
+### 1. CLI Infrastructure Setup
+**Goal:** Create Node.js CLI project structure
 
-#### 1.1 CLI Infrastructure Setup
-- [ ] Set up Node.js + TypeScript project:
-  - [ ] Initialize package.json with proper metadata
-  - [ ] Configure TypeScript (tsconfig.json)
-  - [ ] Set up build scripts
-  - [ ] Configure linting (ESLint)
-  - [ ] Set up testing framework (Jest)
-  - [ ] Add CLI dependencies (commander, inquirer, chalk)
+#### 1.1 Initialize Project
+- [ ] Create `tools/governance-cli/` folder
+- [ ] Initialize package.json:
+  - [ ] Set name: `@trevorplam/governance-cli`
+  - [ ] Set version: `1.0.0`
+  - [ ] Add description
+  - [ ] Define bin entry point
+  - [ ] Add keywords for npm
+  
+- [ ] Configure TypeScript:
+  - [ ] Create tsconfig.json
+  - [ ] Enable strict mode
+  - [ ] Set up module resolution
+  - [ ] Configure output directory
 
-- [ ] Create CLI project structure:
-  - [ ] Create tools/cli/ folder
-  - [ ] Create src/ folder for source code
-  - [ ] Create src/commands/ for command implementations
-  - [ ] Create src/utils/ for utility functions
-  - [ ] Create src/validators/ for validation logic
-  - [ ] Create src/types/ for TypeScript types
-  - [ ] Create bin/ folder for executable
+- [ ] Set up dependencies:
+  - [ ] Add commander (CLI framework)
+  - [ ] Add inquirer (interactive prompts)
+  - [ ] Add chalk (colored output)
+  - [ ] Add ajv (JSON schema validation)
+  - [ ] Add js-yaml (YAML parsing)
+  - [ ] Add fs-extra (file operations)
 
-#### 1.2 CLI Core Commands
-- [ ] Implement `governance init` command:
-  - [ ] Interactive setup wizard
-  - [ ] Create .repo/ structure in target project
-  - [ ] Copy manifest template
-  - [ ] Copy policy files
-  - [ ] Generate initial configuration
-  - [ ] Add Git ignore patterns
-  - [ ] Create initial documentation
+- [ ] Set up development:
+  - [ ] Add TypeScript
+  - [ ] Add ESLint + Prettier
+  - [ ] Add Jest for testing
+  - [ ] Create build script
+  - [ ] Create dev script with watch mode
 
-- [ ] Implement `governance validate` command:
-  - [ ] Validate manifest schema
-  - [ ] Check policy file existence
-  - [ ] Verify template availability
-  - [ ] Validate configuration consistency
-  - [ ] Check agent role definitions
-  - [ ] Report validation errors
+#### 1.2 Create Project Structure
+- [ ] Create folder structure:
+  ```
+  tools/governance-cli/
+  ├── src/
+  │   ├── commands/
+  │   │   ├── init.ts
+  │   │   ├── validate.ts
+  │   │   ├── verify.ts
+  │   │   ├── update.ts
+  │   │   ├── waiver.ts
+  │   │   ├── hitl.ts
+  │   │   └── migrate.ts
+  │   ├── utils/
+  │   │   ├── files.ts
+  │   │   ├── manifest.ts
+  │   │   ├── templates.ts
+  │   │   └── git.ts
+  │   ├── validators/
+  │   │   ├── manifest-validator.ts
+  │   │   └── schema-validator.ts
+  │   ├── types/
+  │   │   └── index.ts
+  │   └── cli.ts (main entry point)
+  ├── bin/
+  │   └── governance (executable)
+  ├── templates/ (symlink to ../../templates/)
+  └── package.json
+  ```
+
+### 2. Implement Core Commands
+
+#### 2.1 `governance-cli init` Command
+**Goal:** Automate template injection (replaces manual copy-paste)
+
+- [ ] Implement interactive wizard:
+  - [ ] Detect project type (npm, yarn, pip, etc.)
+  - [ ] Prompt for project name
+  - [ ] Prompt for tier (Minimal/Standard/Complete)
+  - [ ] Confirm injection
+
+- [ ] Implement file copying:
+  - [ ] Copy templates/.repo/ to target project
+  - [ ] Copy TODO files (P0/P1/P2/COMPLETED)
+  - [ ] Create .repo/hitl/ folder
+  - [ ] Create .repo/waivers/ folders
+  - [ ] Create .repo/archive/ folder
+
+- [ ] Implement auto-fill manifest:
+  - [ ] Detect package.json and extract scripts
+  - [ ] Auto-fill `install` command
+  - [ ] Auto-fill `check:quick` command
+  - [ ] Auto-fill `check:ci` command
+  - [ ] Mark unclear items as `<FILL_FROM_REPO>`
+  - [ ] Preserve `<UNKNOWN>` for truly unknowable items
+
+- [ ] Add .gitignore entries:
+  - [ ] Add .repo/archive/
+  - [ ] Add temporary governance files
+
+- [ ] Create success message:
+  - [ ] Show what was created
+  - [ ] Show next steps
+  - [ ] Explain how to fill remaining manifest fields
+
+#### 2.2 `governance-cli validate` Command
+**Goal:** Check manifest completeness and validity
+
+- [ ] Implement manifest validation:
+  - [ ] Check for `<FILL_FROM_REPO>` placeholders
+  - [ ] Verify commands exist (attempt to run with --help)
+  - [ ] Validate YAML syntax
+  - [ ] Check required sections present
+  - [ ] Validate against JSON schema
+
+- [ ] Implement policy validation:
+  - [ ] Check all 7 policy files exist
+  - [ ] Verify VERSION markers present
+  - [ ] Check for Layer markers
+  - [ ] Validate no accidental edits to Layer 2 files
+
+- [ ] Implement structure validation:
+  - [ ] Check folder structure correct
+  - [ ] Verify template files present
+  - [ ] Check documentation structure
+
+- [ ] Generate validation report:
+  - [ ] List all issues found
   - [ ] Provide fix suggestions
+  - [ ] Exit with error code if invalid
 
-- [ ] Implement `governance verify` command:
-  - [ ] Check boundary compliance
-  - [ ] Verify quality gates
-  - [ ] Validate against policies
-  - [ ] Check agent permissions
-  - [ ] Run security checks
-  - [ ] Generate verification report
-  - [ ] Support CI/CD integration
+#### 2.3 `governance-cli verify` Command
+**Goal:** Run governance checks (for CI/CD)
 
-- [ ] Implement `governance check` command:
-  - [ ] Run pre-commit checks
-  - [ ] Validate PR compliance
-  - [ ] Check documentation updates
-  - [ ] Verify test coverage
-  - [ ] Run linters
-  - [ ] Check for policy violations
-  - [ ] Exit with proper status codes
+- [ ] Implement basic verification:
+  - [ ] Run manifest validation
+  - [ ] Check policy compliance
+  - [ ] Verify agent logs present (if configured)
+  - [ ] Check for required artifacts
 
-- [ ] Implement `governance report` command:
-  - [ ] Generate compliance reports
-  - [ ] Show quality metrics
-  - [ ] Display waiver status
-  - [ ] Show HITL escalations
-  - [ ] Include coverage statistics
-  - [ ] Export to multiple formats (JSON, HTML, markdown)
+- [ ] Support verification profiles:
+  - [ ] `--profile=quick`: Fast checks
+  - [ ] `--profile=ci`: Full CI checks
+  - [ ] `--profile=release`: Pre-release checks
 
-- [ ] Implement `governance waiver` command:
-  - [ ] Create waiver requests
-  - [ ] List active waivers
-  - [ ] Review waiver status
-  - [ ] Approve/reject waivers (with authority check)
-  - [ ] Archive expired waivers
-  - [ ] Generate waiver reports
+- [ ] Generate verification report:
+  - [ ] List passed checks
+  - [ ] List failed checks
+  - [ ] List waivers needed
+  - [ ] Exit with proper status code
 
-- [ ] Implement `governance hitl` command:
-  - [ ] Log HITL escalations
-  - [ ] Track resolution status
-  - [ ] Assign to reviewers
-  - [ ] Update escalation status
-  - [ ] Archive resolved escalations
-  - [ ] Generate HITL reports
+#### 2.4 `governance-cli check-updates` Command
+**Goal:** Check for newer governance versions
 
-- [ ] Implement `governance migrate` command:
-  - [ ] Migrate from old manifest versions
-  - [ ] Update policy files
-  - [ ] Migrate deprecated configurations
-  - [ ] Generate migration report
-  - [ ] Create backup before migration
-  - [ ] Validate after migration
+- [ ] Implement version checking:
+  - [ ] Read local .repo/VERSION file
+  - [ ] Check latest version from templates/
+  - [ ] Compare versions (semver)
+  - [ ] List changes available
 
-#### 1.3 CLI Additional Features
-- [ ] Implement configuration management:
-  - [ ] Support .governancerc file
-  - [ ] Support governance.config.js
-  - [ ] Environment variable support
-  - [ ] Command-line argument parsing
-  - [ ] Configuration validation
+- [ ] Show update information:
+  - [ ] Current version
+  - [ ] Latest version
+  - [ ] Breaking changes (if any)
+  - [ ] New features
+  - [ ] Bug fixes
 
-- [ ] Implement output formatting:
-  - [ ] Colored terminal output (chalk)
-  - [ ] Progress indicators
-  - [ ] Table formatting
-  - [ ] JSON output option
-  - [ ] Quiet mode
-  - [ ] Verbose mode
+#### 2.5 `governance-cli update` Command  
+**Goal:** Apply updates preserving customizations
 
-- [ ] Implement help system:
-  - [ ] Global --help flag
-  - [ ] Command-specific help
-  - [ ] Examples for each command
-  - [ ] Link to online documentation
+- [ ] Implement update logic:
+  - [ ] Create backup in .repo/archive/pre-update-vX.Y.Z/
+  - [ ] Update Layer 2 files (policies)
+  - [ ] Update Layer 3 files (templates, scripts)
+  - [ ] Preserve Layer 1 files (manifest, prompts, ADRs, waivers)
 
-- [ ] Implement error handling:
-  - [ ] User-friendly error messages
-  - [ ] Error codes
-  - [ ] Stack traces in debug mode
-  - [ ] Suggestions for fixes
-  - [ ] Support information
+- [ ] Support dry-run mode:
+  - [ ] `--dry-run`: Show what would change
+  - [ ] Display diff for each file
+  - [ ] Don't actually modify anything
 
-### 2. Boundary Checker Implementation
-**Goal:** Automated boundary and dependency validation
+- [ ] Implement conflict detection:
+  - [ ] Check for Layer 2 modifications
+  - [ ] Warn if customizations found
+  - [ ] Provide merge options
 
-- [ ] Create tools/boundary-checker/ folder
-- [ ] Implement dependency analyzer:
-  - [ ] Parse project dependencies
-  - [ ] Build dependency graph
-  - [ ] Identify import patterns
-  - [ ] Detect cross-layer violations
-  - [ ] Track dependency depth
+- [ ] Validate after update:
+  - [ ] Run validate command
+  - [ ] If validation fails, offer rollback
+  - [ ] Show success message
+#### 2.6 Helper Commands
+**Goal:** Useful utility commands
 
-- [ ] Implement boundary rules engine:
-  - [ ] Load boundary definitions from manifest
-  - [ ] Parse layer definitions
-  - [ ] Validate import rules
-  - [ ] Check allowed dependencies
-  - [ ] Verify architectural patterns
+- [ ] Implement `governance-cli waiver`:
+  - [ ] `create`: Create waiver file from template
+  - [ ] `list`: Show active waivers
+  - [ ] `expire`: Mark waiver as expired
 
-- [ ] Implement violation detection:
-  - [ ] Detect layer violations
-  - [ ] Identify circular dependencies
-  - [ ] Find forbidden imports
-  - [ ] Check dependency direction
-  - [ ] Validate layer interfaces
+- [ ] Implement `governance-cli hitl`:
+  - [ ] `create`: Create HITL item
+  - [ ] `list`: Show HITL items
+  - [ ] `complete`: Mark HITL complete
 
-- [ ] Implement reporting:
-  - [ ] Generate violation reports
-  - [ ] Show dependency visualization
-  - [ ] Suggest fixes
-  - [ ] Export to multiple formats
-  - [ ] Integrate with CI/CD
+- [ ] Implement `governance-cli doctor`:
+  - [ ] Check CLI installation
+  - [ ] Verify templates accessible
+  - [ ] Test git availability
+  - [ ] Validate environment
 
-- [ ] Add configuration options:
-  - [ ] Ignore patterns
-  - [ ] Custom rules
-  - [ ] Severity levels
-  - [ ] Auto-fix suggestions
+### 3. CLI Testing & Packaging
+**Goal:** Ensure CLI works reliably
 
-### 3. Governance Verifier Implementation
-**Goal:** Comprehensive governance compliance checking
+- [ ] Write tests:
+  - [ ] Unit tests for each command
+  - [ ] Integration tests for workflows
+  - [ ] Test auto-fill logic
+  - [ ] Test update logic
+  - [ ] Test error scenarios
 
-- [ ] Create tools/governance-verifier/ folder
-- [ ] Implement policy verifier:
-  - [ ] Load all policies
-  - [ ] Parse policy rules
-  - [ ] Check compliance
-  - [ ] Validate against manifest
-  - [ ] Generate compliance report
+- [ ] Test on real projects:
+  - [ ] Test init on empty project
+  - [ ] Test init on existing project
+  - [ ] Test validate on good manifest
+  - [ ] Test validate on bad manifest
+  - [ ] Test update scenario
 
-- [ ] Implement quality gate verifier:
-  - [ ] Check test coverage
-  - [ ] Verify code quality metrics
-  - [ ] Validate review requirements
-  - [ ] Check documentation updates
-  - [ ] Verify all gates pass
+- [ ] Package CLI:
+  - [ ] Build TypeScript to JavaScript
+  - [ ] Create executable
+  - [ ] Test installation locally
+  - [ ] Write CLI documentation
+  - [ ] Create README for CLI
 
-- [ ] Implement security verifier:
-  - [ ] Check for forbidden patterns
-  - [ ] Scan for vulnerabilities
-  - [ ] Validate secret management
-  - [ ] Check dependency security
-  - [ ] Verify secure coding practices
+### 4. NPM Publishing (Optional)
+**Goal:** Distribute CLI via NPM
 
-- [ ] Implement agent compliance checker:
-  - [ ] Verify agent logs exist
-  - [ ] Check permission compliance
-  - [ ] Validate three-pass execution
-  - [ ] Verify HITL escalations
-  - [ ] Check decision documentation
+- [ ] Prepare for publishing:
+  - [ ] Add .npmignore
+  - [ ] Update package.json metadata
+  - [ ] Add keywords for discoverability
+  - [ ] Write comprehensive README
+  - [ ] Add LICENSE file
+
+- [ ] Test installation:
+  - [ ] Test `npm install -g`
+  - [ ] Test commands work globally
+  - [ ] Test on different OS (Mac, Linux, Windows)
+
+- [ ] Publish to NPM:
+  - [ ] Create NPM account (if needed)
+  - [ ] Run `npm publish`
+  - [ ] Test installation from NPM
+  - [ ] Share installation instructions
+
+---
+
+## 🎉 Phase 3 Complete - Major Milestone Reached!
+
+### ✅ Success Criteria
+- [ ] CLI tool built and packaged
+- [ ] All 5 core commands working (init, validate, verify, check-updates, update)
+- [ ] Auto-fill manifest logic works
+- [ ] Update preserves customizations
+- [ ] Tested on 3+ real projects
+- [ ] Installation instructions clear
+
+### 🚀 YOU CAN NOW INJECT GOVERNANCE IN 5 MINUTES!
+
+**What changed from Phase 2:**
+- **Phase 2 (Manual):** Copy-paste process, ~40 minutes per repo
+- **Phase 3 (Automated):** CLI commands, ~5 minutes per repo
+
+**How to inject (Now Automated):**
+```bash
+# Install CLI globally
+npm install -g @trevorplam/governance-cli
+
+# Navigate to your project
+cd /path/to/your/project
+
+# Inject governance
+governance-cli init
+
+# Answer a few questions (project name, tier)
+# CLI auto-fills manifest from package.json
+# Done!
+
+# Validate setup
+governance-cli validate
+
+# Run governance checks
+governance-cli verify --profile=quick
+```
+
+**Time per injection:** ~5 minutes (8x faster than manual!)  
+**What you get:** Same governance framework, but automated  
+**Bonus:** Can update all repos easily with `governance-cli update`
+
+### 📊 Impact Metrics
+
+**Manual Process (Phase 1-2):**
+- Time: 30-40 min per repo
+- 10 repos = 5-7 hours
+- Error-prone (manual copy)
+- Updates: Very hard
+
+**Automated Process (Phase 3):**
+- Time: 5 min per repo
+- 10 repos = 50 minutes
+- Consistent (automated)
+- Updates: One command
+
+**You can now inject governance into ALL your repos! 🎯**
+
+Next steps:
+- Phase 4: Documentation & examples (optional)
+- Phase 5: Advanced features (optional)
+- **OR**: Start injecting into your repos now!
+
+---
+
+## 📊 Success Criteria
+
+- [ ] CLI commands all working
+- [ ] Auto-fill logic implemented
+- [ ] Update system preserves customizations
+- [ ] Tested on real projects
+- [ ] Installation documented
+- [ ] Published to NPM (optional)
+
+---
+
+## 📈 Key Deliverables
+
+1. **governance-cli Tool** - Complete CLI with 5+ commands
+2. **Auto-fill Logic** - Detects package.json and fills manifest
+3. **Update System** - Safe updates preserving Layer 1
+4. **CLI Documentation** - README and help system
+5. **NPM Package** - Installable via `npm install -g` (optional)
+6. **Test Suite** - Comprehensive testing
+
+---
+
+## 🔗 Dependencies
+
+**Prerequisites:**
+- Phase 2 complete (Tier 2 template working)
+- Node.js and TypeScript knowledge
+
+**Enables:**
+- Rapid governance injection (5 min vs 40 min)
+- Easy updates across all repos
+- Scalable to many repositories
+- Phase 4-6 (optional enhancements)
+
+---
+
+## ⚠️ Notes
+
+- TypeScript/Node.js required - hire developer if needed
+- Can skip NPM publishing for private use
+- Focus on init/validate/update commands first
+- Test thoroughly on diverse projects
+- Waiver/HITL commands can be Phase 5
+
+---
+
+## 📅 Timeline Breakdown
+
+**Week 5:**
+- Days 1-2: CLI infrastructure setup
+- Days 3-4: Implement init command
+- Day 5: Implement validate command
+
+**Week 6:**
+- Days 1-2: Implement verify command
+- Days 3-4: Implement check-updates and update commands
+- Day 5: Helper commands (waiver, hitl, doctor)
+
+**Week 7:**
+- Days 1-3: Write tests
+- Days 4-5: Test on real projects
+
+**Week 8:**
+- Days 1-2: Fix bugs, polish
+- Days 3-4: Package and documentation
+- Day 5: NPM publishing (optional)
+
+---
+
+**Status:** NOT STARTED  
+**Last Updated:** 2026-01-22
 
 - [ ] Implement waiver checker:
   - [ ] Validate active waivers
