@@ -1,0 +1,16 @@
+{
+  "name": "@governance-example/utils",
+  "version": "1.0.0",
+  "description": "Shared utilities and helpers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint src --ext .ts",
+    "clean": "rm -rf dist node_modules"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
