@@ -274,8 +274,9 @@ Expand the injectable template from Phase 1 (Tier 1: Minimal) to Tier 2 (Standar
 
 ---
 
-**Status:** NOT STARTED  
-**Last Updated:** 2026-01-22
+**Status:** ✅ COMPLETE  
+**Last Updated:** 2026-01-22  
+**Completed:** 2026-01-22
 
 ### 4. Create Document Templates
 **Goal:** Standardized templates for all document types
@@ -479,6 +480,7 @@ Expand the injectable template from Phase 1 (Tier 1: Minimal) to Tier 2 (Standar
 
 ---
 
-**Status:** NOT STARTED  
+**Status:** ✅ COMPLETE  
 **Last Updated:** 2026-01-22  
+**Completed:** 2026-01-22  
 **Depends On:** PHASE_1_FOUNDATION_TODO.md
