@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+*.log
+.env
+.env.local
+.DS_Store
+package-lock.json
+
+# Client
+client/dist/
+client/.vite/
+
+# Server
+server/dist/
