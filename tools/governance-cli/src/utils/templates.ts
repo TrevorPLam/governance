@@ -1,6 +1,9 @@
 import * as path from 'path';
-import { copyDirectory, copyFile, getRepoTemplateDir, getRootFilesTemplateDir, ensureDirectory } from './files';
+import { copyDirectory, copyFile, getRepoTemplateDir as getRepoTemplateDirUtil, getRootFilesTemplateDir, ensureDirectory } from './files';
 import { Tier } from '../types';
+
+// Re-export for convenience
+export { getRepoTemplateDir } from './files';
 
 /**
  * Utility functions for template operations
@@ -51,7 +54,7 @@ export function getFilesForTier(tier: Tier): {
  * Copy templates to project based on tier
  */
 export async function copyTemplates(projectRoot: string, tier: Tier): Promise<void> {
-  const repoTemplateDir = getRepoTemplateDir();
+  const repoTemplateDir = getRepoTemplateDirUtil();
   const destRepoDir = path.join(projectRoot, '.repo');
   
   // Ensure destination exists
@@ -130,7 +133,7 @@ export async function copyRootFiles(projectRoot: string): Promise<void> {
  */
 export async function getTemplateVersion(): Promise<string> {
   const { readFile, fileExists } = await import('./files');
-  const versionPath = path.join(getRepoTemplateDir(), 'VERSION');
+  const versionPath = path.join(getRepoTemplateDirUtil(), 'VERSION');
   
   if (await fileExists(versionPath)) {
     const content = await readFile(versionPath);

@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { VerificationResult, CheckResult } from '../types';
+import { VerificationResult } from '../types';
 import { getProjectRoot, directoryExists } from '../utils/files';
 import { readManifest } from '../utils/manifest';
 
@@ -36,7 +36,7 @@ export async function verifyCommand(options: { profile?: string; verbose?: boole
 
     const profile = options.profile || 'quick';
     const manifest = await readManifest(projectRoot);
-    const profileChecks = manifest?.verify_profiles?.[profile] || ['manifest', 'structure'];
+    const profileChecks = manifest?.verify_profiles?.[profile as keyof typeof manifest.verify_profiles] || ['manifest', 'structure'];
 
     console.log(chalk.blue('Running verification checks...\n'));
 
@@ -116,7 +116,7 @@ async function verifyManifest(projectRoot: string, result: VerificationResult): 
   const missing: string[] = [];
 
   for (const cmd of requiredCommands) {
-    const value = manifest.commands?.[cmd];
+    const value = manifest.commands?.[cmd as keyof typeof manifest.commands];
     if (!value || value === '<FILL_FROM_REPO>') {
       allConfigured = false;
       missing.push(cmd);

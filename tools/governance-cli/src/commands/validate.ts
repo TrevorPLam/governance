@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import * as path from 'path';
-import { ValidationResult, ValidationError, ValidationWarning } from '../types';
+import { ValidationResult } from '../types';
 import { getProjectRoot, fileExists, directoryExists } from '../utils/files';
 import { readManifest, hasPlaceholders, getPlaceholderCommands } from '../utils/manifest';
 
@@ -147,7 +147,7 @@ async function validateManifest(projectRoot: string, result: ValidationResult): 
   // Check required commands
   const requiredCommands = ['install', 'check:quick', 'check:ci'];
   for (const cmd of requiredCommands) {
-    const value = manifest.commands?.[cmd];
+    const value = manifest.commands?.[cmd as keyof typeof manifest.commands];
     if (!value || value === '<FILL_FROM_REPO>') {
       result.valid = false;
       result.errors.push({

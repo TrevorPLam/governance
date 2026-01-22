@@ -89,8 +89,9 @@ export async function ensureDirectory(dirPath: string): Promise<void> {
  * Get template directory path
  */
 export function getTemplateDir(): string {
-  // Assume templates are in the governance repo root, two levels up from this CLI
-  return path.resolve(__dirname, '../../../templates');
+  // From dist/utils/ we need to go up to governance root, then into templates
+  // dist/utils/ -> dist/ -> governance-cli/ -> tools/ -> governance/ -> templates/
+  return path.resolve(__dirname, '../../../../templates');
 }
 
 /**

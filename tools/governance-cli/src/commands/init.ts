@@ -6,8 +6,6 @@ import {
   getProjectRoot,
   directoryExists,
   ensureDirectory,
-  fileExists,
-  writeFile,
 } from '../utils/files';
 import { detectProjectInfo, autoFillManifest, writeManifest } from '../utils/manifest';
 import { copyTemplates, copyRootFiles, getTemplateVersion } from '../utils/templates';
