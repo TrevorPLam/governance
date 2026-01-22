@@ -167,8 +167,6 @@ export async function initCommand(options: InitOptions) {
   } catch (error) {
     console.error(chalk.red('\n❌ Error during initialization:'));
     console.error(chalk.red((error as Error).message));
-    console.error(chalk.gray('\nStack trace:'));
-    console.error(chalk.gray((error as Error).stack || 'No stack trace available'));
     process.exit(1);
   }
 }

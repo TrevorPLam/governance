@@ -3,6 +3,9 @@ import { VerificationResult } from '../types';
 import { getProjectRoot, directoryExists } from '../utils/files';
 import { readManifest } from '../utils/manifest';
 
+// Minimum expected length for policy files (in characters)
+const MIN_POLICY_FILE_LENGTH = 100;
+
 /**
  * Verify command handler
  */
@@ -189,7 +192,7 @@ async function verifyPolicies(projectRoot: string, result: VerificationResult): 
     const filePath = path.join(projectRoot, '.repo', 'policy', file);
     if (await fileExists(filePath)) {
       const content = await readFile(filePath);
-      if (content.trim().length < 100) {
+      if (content.trim().length < MIN_POLICY_FILE_LENGTH) {
         allValid = false;
         invalid.push(file);
       }

@@ -71,12 +71,13 @@ export async function addToGitignore(
     // File doesn't exist, will be created
   }
 
-  // Check if pattern already exists
-  if (content.includes(pattern)) {
+  // Check if pattern already exists as a complete line
+  const lines = content.split('\n');
+  if (lines.some(line => line.trim() === pattern)) {
     return;
   }
 
-  // Add pattern
-  const newContent = content + (content.endsWith('\n') ? '' : '\n') + pattern + '\n';
+  // Add pattern as a new line
+  const newContent = content + (content.endsWith('\n') || content === '' ? '' : '\n') + pattern + '\n';
   await fs.writeFile(gitignorePath, newContent, 'utf-8');
 }
