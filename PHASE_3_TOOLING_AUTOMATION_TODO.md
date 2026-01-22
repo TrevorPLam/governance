@@ -398,19 +398,81 @@ Next steps:
 
 ---
 
-**Status:** 🟡 CORE COMPLETE (50% of Phase 3)  
+**Status:** 🟡 IN PROGRESS (65% of Phase 3)  
 **Last Updated:** 2026-01-22  
 **Core Completion Date:** 2026-01-22
 
-**Note:** Core CLI automation (Tasks 1-4) completed and tested. Remaining items (boundary checker, CI/CD templates, advanced validators) deferred to later phases as they are non-blocking for Phase 4-6.
+**Note:** Core CLI automation (Tasks 1-4) completed and tested. CI/CD templates (Task 4) now complete. Remaining items being completed per user request.
 
 ---
 
-## Remaining Phase 3 Items (Deferred)
+## Remaining Phase 3 Items (In Progress)
 
-The following items are part of Phase 3 but have been deferred as they are not critical for proceeding to Phase 4:
+The following items are being completed:
 
-### 5. Boundary Checker (Deferred)
+### 4. CI/CD Templates and Integrations ✅ COMPLETE
+**Goal:** Ready-to-use CI/CD configurations
+
+#### 4.1 GitHub Actions Workflows ✅
+- [x] Create .github/workflows/templates/ folder
+- [x] Create governance-check.yml:
+  - [x] Run on PR creation/update
+  - [x] Execute governance verify
+  - [x] Check boundaries
+  - [x] Validate manifest
+  - [x] Post results as comments
+  - [x] Block merge on failures (configurable)
+
+- [x] Create quality-gates.yml:
+  - [x] Run tests with coverage
+  - [x] Check coverage thresholds
+  - [x] Run linters
+  - [x] Verify build succeeds
+  - [x] Check documentation
+  - [x] Generate quality report
+
+- [x] Create security-scan.yml:
+  - [x] Dependency vulnerability scan
+  - [x] Secret scanning
+  - [x] SAST scanning
+  - [x] Container scanning (if applicable)
+  - [x] Generate security report
+  - [x] Block on critical issues
+
+- [x] Create release.yml:
+  - [x] Validate release readiness
+  - [x] Check all quality gates
+  - [x] Verify documentation updated
+  - [x] Generate release notes
+  - [x] Create GitHub release
+  - [x] Deploy artifacts
+
+#### 4.2 Reusable Workflow Components ✅
+- [x] Create composite actions:
+  - [x] governance-setup action
+  - [x] boundary-check action
+  - [x] quality-check action
+  - [x] security-check action
+
+- [x] Document workflow usage:
+  - [x] Create workflow guide (README.md)
+  - [x] Include configuration examples
+  - [x] Document customization options
+  - [x] Add troubleshooting section
+
+#### 4.3 Other CI/CD Platforms ✅
+- [x] Create templates for other platforms:
+  - [x] GitLab CI (.gitlab-ci.yml)
+  - [x] CircleCI (config.yml)
+  - [x] Jenkins (Jenkinsfile)
+  - [x] Azure Pipelines (azure-pipelines.yml)
+
+- [x] Document platform-specific setup:
+  - [x] Installation instructions (in templates)
+  - [x] Configuration guide (inline comments)
+  - [x] Example pipelines (working examples)
+
+### 5. Boundary Checker (Deferred to Phase 5)
 **Goal:** Automated dependency validation
 
 - [ ] Implement waiver checker:
