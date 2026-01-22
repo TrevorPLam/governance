@@ -1,0 +1,13 @@
+{
+  "name": "governance-example-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "node scripts/lint.js",
+    "test": "node scripts/test.js",
+    "build": "node scripts/build.js",
+    "security:scan": "node scripts/security-scan.js"
+  }
+}

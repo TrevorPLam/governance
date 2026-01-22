@@ -1,0 +1,11 @@
+{
+  "name": "governance-example-fullstack",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "lint": "node scripts/lint.js",
+    "test": "node scripts/test.js",
+    "build": "node scripts/build.js",
+    "security:scan": "node scripts/security-scan.js"
+  }
+}

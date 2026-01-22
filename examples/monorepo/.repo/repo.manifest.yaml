@@ -1,0 +1,63 @@
+# /.repo/repo.manifest.yaml
+
+governance:
+  version: "1.0.0"
+  framework: "ai-native-governance"
+
+repo:
+  ships: true
+  ship_kind: user_facing_app
+  release_protects: [app_stability, login_security]
+
+prerequisites:
+  package_manager: npm
+  runtime_pinned: true
+  platform_tools_required_for_release: false
+
+commands:
+  install: "npm install"
+  check:quick: "npm run lint && npm run test"
+  check:ci: "npm run lint && npm run test && npm run build"
+  check:release: "npm run lint && npm run test && npm run build && npm run security:scan"
+  check:governance: "governance verify --profile=governance"
+  check:boundaries: "node scripts/check-boundaries.js"
+  check:security: "node scripts/security-scan.js"
+
+verify_profiles:
+  quick: [check:quick]
+  ci: [check:ci]
+  release: [check:release]
+  governance: [check:governance]
+
+tests:
+  required_level: unit+integration
+
+budgets:
+  mode: both
+  enforcement: hard_fail_with_waiver
+  fallback_to_default: true
+
+security:
+  every_pr: true
+  release_includes_security: true
+  dependency_vulns_always_hitl: true
+  secrets_absolute_prohibition: true
+  forbidden_patterns_source: "/.repo/policy/SECURITY_BASELINE.md"
+
+boundaries:
+  enforcement: hybrid_checker_plus_manifest_edges
+  edges_model: layered_allow_list
+  layers:
+    ui:
+      - "packages/web/src/ui/**"
+    domain:
+      - "packages/web/src/domain/**"
+      - "packages/api/src/domain/**"
+    data:
+      - "packages/api/src/data/**"
+    platform:
+      - "packages/shared/src/platform/**"
+  features:
+    - "packages/web/src/features/**"
+    - "packages/api/src/features/**"
+  edges: []

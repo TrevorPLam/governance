@@ -1,0 +1,22 @@
+name: Governance Checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Validate governance
+        run: governance validate
+      - name: Verify governance (CI)
+        run: governance verify --profile=ci
