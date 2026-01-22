@@ -1,0 +1,174 @@
+# Release Workflow
+# Validates release readiness and creates GitHub releases
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  validate-release:
+    name: Validate Release Readiness
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run all quality gates
+        run: |
+          npm run lint
+          npm test -- --coverage
+          npm run build
+      
+      - name: Check governance compliance
+        run: |
+          npm install -g @trevorplam/governance-cli
+          governance-cli validate
+          governance-cli verify --profile=thorough
+      
+      - name: Verify documentation updated
+        run: |
+          # Check if CHANGELOG exists and has entry for this version
+          VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          if [ -f CHANGELOG.md ]; then
+            if ! grep -q "$VERSION" CHANGELOG.md; then
+              echo "::error::CHANGELOG.md doesn't contain entry for $VERSION"
+              exit 1
+            fi
+          else
+            echo "::warning::CHANGELOG.md not found"
+          fi
+      
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          
+          if [ -z "$PREV_TAG" ]; then
+            echo "## What's Changed" > release-notes.md
+            echo "" >> release-notes.md
+            echo "Initial release" >> release-notes.md
+          else
+            echo "## What's Changed" > release-notes.md
+            echo "" >> release-notes.md
+            git log --pretty=format:"- %s (%h)" $PREV_TAG..HEAD >> release-notes.md
+          fi
+          
+          echo "" >> release-notes.md
+          echo "## Installation" >> release-notes.md
+          echo "" >> release-notes.md
+          echo '```bash' >> release-notes.md
+          echo 'npm install -g @trevorplam/governance-cli' >> release-notes.md
+          echo '```' >> release-notes.md
+          
+          cat release-notes.md
+      
+      - name: Upload release notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: release-notes.md
+          retention-days: 7
+  
+  create-release:
+    name: Create GitHub Release
+    needs: validate-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build artifacts
+        run: npm run build
+      
+      - name: Package artifacts
+        run: |
+          VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          mkdir -p dist
+          tar -czf dist/governance-${VERSION}.tar.gz \
+            -C tools/governance-cli/dist .
+      
+      - name: Download release notes
+        uses: actions/download-artifact@v4
+        with:
+          name: release-notes
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.version || github.ref_name }}
+          name: Release ${{ github.event.inputs.version || github.ref_name }}
+          body_path: release-notes.md
+          draft: false
+          prerelease: false
+          files: |
+            dist/*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  publish-npm:
+    name: Publish to NPM
+    needs: create-release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Publish to NPM
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: tools/governance-cli
+
+# Configuration:
+# - Set NPM_TOKEN secret for publishing to npm
+# - Adjust quality gates in validate-release job
+# - Modify artifact packaging as needed
+# - Add deployment steps if needed

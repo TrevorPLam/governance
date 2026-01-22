@@ -1,0 +1,205 @@
+# Security Scan Workflow
+# Performs security scanning: dependencies, secrets, SAST
+
+name: Security Scan
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+      - develop
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Dependency vulnerability scan
+        id: npm-audit
+        continue-on-error: true
+        run: |
+          npm audit --audit-level=moderate --json > npm-audit.json || true
+          
+          # Check for critical/high vulnerabilities
+          CRITICAL=$(cat npm-audit.json | jq '.metadata.vulnerabilities.critical // 0')
+          HIGH=$(cat npm-audit.json | jq '.metadata.vulnerabilities.high // 0')
+          
+          echo "critical=${CRITICAL}" >> $GITHUB_OUTPUT
+          echo "high=${HIGH}" >> $GITHUB_OUTPUT
+          
+          if [ "$CRITICAL" -gt 0 ]; then
+            echo "::error::Found ${CRITICAL} critical vulnerabilities"
+            echo "audit_result=critical" >> $GITHUB_OUTPUT
+            exit 1
+          elif [ "$HIGH" -gt 0 ]; then
+            echo "::warning::Found ${HIGH} high vulnerabilities"
+            echo "audit_result=high" >> $GITHUB_OUTPUT
+          else
+            echo "audit_result=pass" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Secret scanning with TruffleHog
+        id: trufflehog
+        continue-on-error: true
+        run: |
+          # Install TruffleHog
+          docker pull trufflesecurity/trufflehog:latest
+          
+          # Scan for secrets
+          docker run --rm -v $(pwd):/repo trufflesecurity/trufflehog:latest \
+            filesystem /repo \
+            --json \
+            --only-verified \
+            > trufflehog-results.json || true
+          
+          # Check if any secrets found
+          SECRETS=$(cat trufflehog-results.json | jq -s 'length')
+          echo "secrets_found=${SECRETS}" >> $GITHUB_OUTPUT
+          
+          if [ "$SECRETS" -gt 0 ]; then
+            echo "::error::Found ${SECRETS} potential secrets"
+            echo "secret_result=fail" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "secret_result=pass" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: SAST with Semgrep
+        id: semgrep
+        continue-on-error: true
+        run: |
+          # Install Semgrep
+          pip install semgrep
+          
+          # Run Semgrep with common rules
+          semgrep --config=auto \
+            --json \
+            --output=semgrep-results.json \
+            || true
+          
+          # Check for high/critical findings
+          FINDINGS=$(cat semgrep-results.json | jq '[.results[] | select(.extra.severity == "ERROR")] | length')
+          echo "sast_findings=${FINDINGS}" >> $GITHUB_OUTPUT
+          
+          if [ "$FINDINGS" -gt 0 ]; then
+            echo "::warning::Found ${FINDINGS} SAST findings"
+            echo "sast_result=warn" >> $GITHUB_OUTPUT
+          else
+            echo "sast_result=pass" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Container scanning (if applicable)
+        id: container
+        if: hashFiles('Dockerfile') != ''
+        continue-on-error: true
+        run: |
+          # Install Trivy
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+          
+          # Build and scan container
+          docker build -t temp-image:latest .
+          trivy image --severity HIGH,CRITICAL --exit-code 1 temp-image:latest
+          echo "container_result=$?" >> $GITHUB_OUTPUT
+      
+      - name: Generate Security Report
+        if: always()
+        run: |
+          echo "## 🔒 Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Scan | Status | Details |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+          
+          AUDIT_STATUS="${{ steps.npm-audit.outputs.audit_result == 'pass' && '✅ Passed' || steps.npm-audit.outputs.audit_result == 'high' && '⚠️ High Risk' || '❌ Critical' }}"
+          echo "| Dependency Scan | ${AUDIT_STATUS} | Critical: ${{ steps.npm-audit.outputs.critical }}, High: ${{ steps.npm-audit.outputs.high }} |" >> $GITHUB_STEP_SUMMARY
+          
+          SECRET_STATUS="${{ steps.trufflehog.outputs.secret_result == 'pass' && '✅ Passed' || '❌ Failed' }}"
+          echo "| Secret Scan | ${SECRET_STATUS} | Secrets found: ${{ steps.trufflehog.outputs.secrets_found }} |" >> $GITHUB_STEP_SUMMARY
+          
+          SAST_STATUS="${{ steps.semgrep.outputs.sast_result == 'pass' && '✅ Passed' || '⚠️ Warnings' }}"
+          echo "| SAST Scan | ${SAST_STATUS} | Findings: ${{ steps.semgrep.outputs.sast_findings }} |" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.container.outcome }}" != "skipped" ]; then
+            CONTAINER_STATUS="${{ steps.container.outputs.container_result == '0' && '✅ Passed' || '❌ Failed' }}"
+            echo "| Container Scan | ${CONTAINER_STATUS} | Docker image scanned |" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Upload scan results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-scan-results
+          path: |
+            npm-audit.json
+            trufflehog-results.json
+            semgrep-results.json
+          retention-days: 90
+      
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && (success() || failure())
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const audit = '${{ steps.npm-audit.outputs.audit_result }}';
+            const secrets = '${{ steps.trufflehog.outputs.secret_result }}' === 'pass' ? '✅' : '❌';
+            const sast = '${{ steps.semgrep.outputs.sast_result }}' === 'pass' ? '✅' : '⚠️';
+            
+            const critical = '${{ steps.npm-audit.outputs.critical }}';
+            const high = '${{ steps.npm-audit.outputs.high }}';
+            
+            let auditEmoji = '✅';
+            if (audit === 'critical') auditEmoji = '❌';
+            else if (audit === 'high') auditEmoji = '⚠️';
+            
+            const body = `## 🔒 Security Scan Results
+            
+            | Scan | Status | Details |
+            |------|--------|---------|
+            | Dependencies | ${auditEmoji} | Critical: ${critical}, High: ${high} |
+            | Secrets | ${secrets} | No secrets detected |
+            | SAST | ${sast} | Code analysis complete |
+            
+            ${audit === 'critical' || secrets === '❌' ? '🚨 **Critical security issues found. Must be fixed before merge.**' : '✅ **Security scans passed!**'}`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+      
+      - name: Block on critical issues
+        if: |
+          steps.npm-audit.outputs.audit_result == 'critical' ||
+          steps.trufflehog.outputs.secret_result == 'fail'
+        run: |
+          echo "::error::Critical security issues found. Cannot proceed."
+          exit 1
+
+# Configuration:
+# - Modify audit-level in npm audit command to change threshold
+# - Add/remove scanning tools as needed
+# - Configure schedule for regular scans
+# - Adjust blocking conditions in final step

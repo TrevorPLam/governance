@@ -1,0 +1,51 @@
+name: 'Governance Setup'
+description: 'Sets up governance CLI and validates configuration'
+inputs:
+  version:
+    description: 'Version of governance-cli to install'
+    required: false
+    default: 'latest'
+  skip-validation:
+    description: 'Skip initial validation'
+    required: false
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install Governance CLI
+      shell: bash
+      run: |
+        if [ "${{ inputs.version }}" = "latest" ]; then
+          npm install -g @trevorplam/governance-cli
+        else
+          npm install -g @trevorplam/governance-cli@${{ inputs.version }}
+        fi
+    
+    - name: Verify Installation
+      shell: bash
+      run: |
+        governance-cli --version
+        echo "✅ Governance CLI installed successfully"
+    
+    - name: Validate Configuration
+      if: inputs.skip-validation != 'true'
+      shell: bash
+      run: |
+        if [ -f .repo/repo.manifest.yaml ]; then
+          governance-cli validate
+          echo "✅ Governance configuration validated"
+        else
+          echo "⚠️ No governance configuration found (.repo/repo.manifest.yaml)"
+          echo "Run 'governance-cli init' to initialize governance in this repository"
+        fi
+
+branding:
+  icon: 'check-circle'
+  color: 'green'

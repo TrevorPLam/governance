@@ -1,0 +1,151 @@
+# CircleCI Configuration for Governance
+# Copy this file to your project as .circleci/config.yml
+
+version: 2.1
+
+orbs:
+  node: circleci/node@5.1.0
+
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:18.0
+    working_directory: ~/project
+
+commands:
+  setup-governance:
+    description: "Install and setup governance CLI"
+    steps:
+      - run:
+          name: Install Governance CLI
+          command: npm install -g @trevorplam/governance-cli
+
+jobs:
+  validate-governance:
+    executor: node-executor
+    steps:
+      - checkout
+      - node/install-packages
+      - setup-governance
+      - run:
+          name: Validate Governance Configuration
+          command: governance-cli validate --verbose
+      - run:
+          name: Verify Governance Compliance
+          command: governance-cli verify --profile=quick
+
+  lint:
+    executor: node-executor
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run Linter
+          command: npm run lint
+
+  test:
+    executor: node-executor
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run Tests with Coverage
+          command: npm test -- --coverage --ci
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: coverage
+          destination: coverage-report
+      - run:
+          name: Check Coverage Threshold
+          command: |
+            if [ -f coverage/coverage-summary.json ]; then
+              COVERAGE=$(node -pe "JSON.parse(require('fs').readFileSync('coverage/coverage-summary.json')).total.lines.pct")
+              echo "Coverage: ${COVERAGE}%"
+              MINIMUM=70
+              if (( $(echo "$COVERAGE < $MINIMUM" | bc -l) )); then
+                echo "Coverage ${COVERAGE}% below minimum ${MINIMUM}%"
+                exit 1
+              fi
+            fi
+
+  build:
+    executor: node-executor
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Build Project
+          command: npm run build
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - dist
+
+  security-scan:
+    executor: node-executor
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Dependency Audit
+          command: npm audit --audit-level=moderate
+      - run:
+          name: Secret Detection
+          command: |
+            PATTERNS="(password|secret|api[_-]?key|token|credential).*=.*['\"]"
+            if grep -r -i -E "$PATTERNS" . \
+               --exclude-dir=node_modules \
+               --exclude-dir=.git; then
+              echo "Potential secrets found"
+              exit 1
+            fi
+
+  full-verification:
+    executor: node-executor
+    steps:
+      - checkout
+      - node/install-packages
+      - setup-governance
+      - run:
+          name: Full Governance Verification
+          command: governance-cli verify --profile=thorough
+
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - validate-governance
+      - lint:
+          requires:
+            - validate-governance
+      - test:
+          requires:
+            - validate-governance
+      - build:
+          requires:
+            - lint
+            - test
+      - security-scan:
+          requires:
+            - validate-governance
+      - full-verification:
+          requires:
+            - build
+            - security-scan
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+
+  daily-security-scan:
+    triggers:
+      - schedule:
+          cron: "0 2 * * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - security-scan
