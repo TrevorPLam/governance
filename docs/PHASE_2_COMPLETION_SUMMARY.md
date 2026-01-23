@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-Phase 2 of the AI-Native Governance System implementation has been successfully completed. All 6 tasks from PHASE_2_CORE_FRAMEWORK_TODO.md have been accomplished, expanding the Tier 1 (Minimal) template to Tier 2 (Standard) with comprehensive agent framework, templates, and documentation.
+Phase 2 of the AI-Native Governance System implementation has been successfully completed. All 6 tasks from planning/roadmap/PHASE_2_CORE_FRAMEWORK_TODO.md have been accomplished, expanding the Tier 1 (Minimal) template to Tier 2 (Standard) with comprehensive agent framework, templates, and documentation.
 
 ---
 

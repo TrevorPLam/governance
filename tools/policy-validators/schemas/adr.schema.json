@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Architecture Decision Record",
+  "type": "object",
+  "required": ["id", "title", "status", "date"],
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+    "status": { "type": "string" },
+    "date": { "type": "string", "format": "date-time" },
+    "context": { "type": "string" },
+    "decision": { "type": "string" },
+    "consequences": { "type": "string" }
+  },
+  "additionalProperties": true
+}

@@ -43,7 +43,7 @@ You asked for **PLANNING ONLY** to:
 ---
 
 ### 📗 Document 2: Visual Comparison
-**File:** `CURRENT_VS_INJECTABLE_COMPARISON.md` (19KB)  
+**File:** `analysis/CURRENT_VS_INJECTABLE_COMPARISON.md` (19KB)  
 **Read Time:** 20 minutes  
 **Purpose:** Side-by-side "before vs. after" comparison
 
@@ -207,7 +207,7 @@ $ governance-cli update      # Safe updates
 ---
 
 ### Option 2: Understand FIRST, Build Later
-1. Read `CURRENT_VS_INJECTABLE_COMPARISON.md` (20 min)
+1. Read `analysis/CURRENT_VS_INJECTABLE_COMPARISON.md` (20 min)
 2. Get visual understanding of transformation
 3. Read `INJECTABLE_FRAMEWORK_PLANNING_GUIDE.md` (60 min)
 4. Understand full architecture and strategy
@@ -233,7 +233,7 @@ $ governance-cli update      # Safe updates
 → `FRAMEWORK_RESTRUCTURING_PLAN.md` (94 checkboxes)
 
 ### "Why am I building this?"
-→ `CURRENT_VS_INJECTABLE_COMPARISON.md` (before/after comparison)
+→ `analysis/CURRENT_VS_INJECTABLE_COMPARISON.md` (before/after comparison)
 
 ### "How should the system work?"
 → `INJECTABLE_FRAMEWORK_PLANNING_GUIDE.md` (architecture & strategy)
@@ -371,9 +371,9 @@ $ governance-cli update      # Safe updates
 
 ### Planning Documents (NEW)
 1. `FRAMEWORK_RESTRUCTURING_PLAN.md` - Action checklist
-2. `CURRENT_VS_INJECTABLE_COMPARISON.md` - Visual comparison
+2. `analysis/CURRENT_VS_INJECTABLE_COMPARISON.md` - Visual comparison
 3. `INJECTABLE_FRAMEWORK_PLANNING_GUIDE.md` - Strategic guide
-4. This file - Quick navigation guide
+4. This file - Quick navigation guide (planning/PLANNING_START_HERE.md)
 
 ### Implementation Specs (EXISTING)
 - `00. Implementation/phase1-9.md` - What to build (specifications)
@@ -381,12 +381,12 @@ $ governance-cli update      # Safe updates
 ### Research & Context (EXISTING)
 - `02. Assets/Research/` - Background research
 - `02. Assets/Products/` - Feature recommendations
-- `EXECUTIVE_SUMMARY.md` - High-level overview
-- `REPOSITORY_ANALYSIS_AND_RECOMMENDATIONS.md` - Detailed analysis
+- `analysis/EXECUTIVE_SUMMARY.md` - High-level overview
+- `analysis/REPOSITORY_ANALYSIS_AND_RECOMMENDATIONS.md` - Detailed analysis
 
 ### TODO Guidance (EXISTING)
-- `MASTER_IMPLEMENTATION_ROADMAP_TODO.md` - Overall roadmap
-- `PHASE_1_FOUNDATION_TODO.md` through `PHASE_6_POLISH_SCALE_TODO.md`
+- `roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md` - Overall roadmap
+- `roadmap/PHASE_1_FOUNDATION_TODO.md` through `roadmap/PHASE_6_POLISH_SCALE_TODO.md`
 
 ---
 
@@ -459,7 +459,7 @@ Think of it like this:
 6. Continue down the list
 
 ### If NOT YET:
-1. Read `CURRENT_VS_INJECTABLE_COMPARISON.md` to understand transformation
+1. Read `analysis/CURRENT_VS_INJECTABLE_COMPARISON.md` to understand transformation
 2. Skim `INJECTABLE_FRAMEWORK_PLANNING_GUIDE.md` for strategy
 3. Return to this file and pick "Ready to Start?" option above
 
@@ -479,3 +479,4 @@ All answers are in the planning documents:
 **Status:** 📋 Planning Complete | 🚀 Ready to Implement | ⏱️ 4-14 weeks to completion
 
 **Next Action:** Choose your path and start building! Good luck! 🎯
+

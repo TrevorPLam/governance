@@ -109,6 +109,27 @@ export function getRootFilesTemplateDir(): string {
 }
 
 /**
+ * Get governance repository root path
+ */
+export function getGovernanceRoot(): string {
+  return path.resolve(getTemplateDir(), '..');
+}
+
+/**
+ * Get maturity criteria path
+ */
+export function getMaturityCriteriaPath(): string {
+  return path.join(getGovernanceRoot(), 'tools', 'maturity-assessment', 'criteria.json');
+}
+
+/**
+ * Get policy validators root path
+ */
+export function getPolicyValidatorsRoot(): string {
+  return path.join(getGovernanceRoot(), 'tools', 'policy-validators');
+}
+
+/**
  * Find file in parent directories
  */
 export async function findFileInParents(

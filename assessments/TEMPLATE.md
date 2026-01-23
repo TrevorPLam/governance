@@ -20,7 +20,7 @@ List all relevant files reviewed during assessment:
 - [ ] [File 3]
 
 ### Related Documentation
-- [ ] Phase document: [e.g., PHASE_1_FOUNDATION_TODO.md]
+- [ ] Phase document: [e.g., planning/roadmap/PHASE_1_FOUNDATION_TODO.md]
 - [ ] Implementation specs: [e.g., 00. Implementation/phase2.md]
 - [ ] Related planning docs: [List any]
 - [ ] WORKFLOW_GUIDELINES.md

@@ -242,8 +242,8 @@ $ governance-cli migrate --to=v2.0.0
 ### Current TODO Structure (in this repo)
 
 **Root-level TODOs:**
-- `MASTER_IMPLEMENTATION_ROADMAP_TODO.md` (20-week plan)
-- `PHASE_1_FOUNDATION_TODO.md` through `PHASE_6_POLISH_SCALE_TODO.md`
+- `roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md` (20-week plan)
+- `roadmap/PHASE_1_FOUNDATION_TODO.md` through `roadmap/PHASE_6_POLISH_SCALE_TODO.md`
 
 **Problem:** These are for building THIS repo, not for injecting into external repos.
 

@@ -1,0 +1,9 @@
+{
+  "patterns": [
+    "eval\\(",
+    "Function\\(",
+    "dangerouslySetInnerHTML",
+    "innerHTML\\s*=",
+    "document\\.write\\("
+  ]
+}

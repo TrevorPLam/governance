@@ -151,8 +151,8 @@ The task required implementing a system to enforce the following requirements:
 ### Complements Existing Planning
 
 The workflow guidelines integrate seamlessly with:
-- **PLANNING_START_HERE.md**: Navigation guide
-- **MASTER_IMPLEMENTATION_ROADMAP_TODO.md**: Overall plan
+- **../PLANNING_START_HERE.md**: Navigation guide
+- **../roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md**: Overall plan
 - **PHASE_X_FOUNDATION_TODO.md**: Phase-specific tasks
 - **00. Implementation/**: Original specifications
 
@@ -217,7 +217,7 @@ The workflow guidelines integrate seamlessly with:
 
 ```bash
 # 1. Read the phase document
-cat PHASE_1_FOUNDATION_TODO.md
+cat ../roadmap/PHASE_1_FOUNDATION_TODO.md
 
 # 2. Create assessment
 cp assessments/TEMPLATE.md assessments/phase-1-task-1.1.md

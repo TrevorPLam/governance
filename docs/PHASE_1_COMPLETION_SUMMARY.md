@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-Phase 1 of the AI-Native Governance System implementation has been successfully completed. All 33 tasks from PHASE_1_FOUNDATION_TODO.md have been accomplished, resulting in a complete, production-ready injectable governance template that can be manually deployed to any repository.
+Phase 1 of the AI-Native Governance System implementation has been successfully completed. All 33 tasks from planning/roadmap/PHASE_1_FOUNDATION_TODO.md have been accomplished, resulting in a complete, production-ready injectable governance template that can be manually deployed to any repository.
 
 ---
 
@@ -114,7 +114,7 @@ templates/
 ## Success Metrics
 
 ### Phase 1 Success Criteria (All Met ✅)
-From PHASE_1_FOUNDATION_TODO.md:
+From planning/roadmap/PHASE_1_FOUNDATION_TODO.md:
 
 - [x] All 7 policy files exist in `templates/.repo/policy/`
 - [x] Manifest template exists with proper placeholders
@@ -231,7 +231,7 @@ All Phase 1 deliverables required for Phase 2:
 
 ### Files Changed
 - **Added:** 25 new files (23 template files + 2 documentation files)
-- **Modified:** 1 file (PHASE_1_FOUNDATION_TODO.md status)
+- **Modified:** 1 file (planning/roadmap/PHASE_1_FOUNDATION_TODO.md status)
 - **Total Changes:** 26 files
 
 ---

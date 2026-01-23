@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Governance Waiver",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["waiver_id", "policy", "reason", "status", "expires_at"],
+    "properties": {
+      "waiver_id": { "type": "string" },
+      "policy": { "type": "string" },
+      "reason": { "type": "string" },
+      "status": { "type": "string" },
+      "expires_at": { "type": "string", "format": "date-time" },
+      "approved_by": { "type": "string" },
+      "created_at": { "type": "string", "format": "date-time" }
+    },
+    "additionalProperties": true
+  }
+}

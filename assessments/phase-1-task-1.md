@@ -14,16 +14,16 @@
 - **Current Task Number:** Task 1
 
 ### Files Reviewed
-- [x] PHASE_1_FOUNDATION_TODO.md
+- [x] planning/roadmap/PHASE_1_FOUNDATION_TODO.md
 - [x] WORKFLOW_GUIDELINES.md
-- [x] MASTER_IMPLEMENTATION_ROADMAP_TODO.md
+- [x] planning/roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md
 - [x] 00. Implementation/phase1.md
-- [x] PLANNING_START_HERE.md
+- [x] planning/PLANNING_START_HERE.md
 
 ### Related Documentation
-- [x] Phase document: PHASE_1_FOUNDATION_TODO.md
+- [x] Phase document: planning/roadmap/PHASE_1_FOUNDATION_TODO.md
 - [x] Implementation specs: Not directly applicable (this is structure creation)
-- [x] Related planning docs: FRAMEWORK_RESTRUCTURING_PLAN.md
+- [x] Related planning docs: planning/FRAMEWORK_RESTRUCTURING_PLAN.md
 - [x] WORKFLOW_GUIDELINES.md
 
 ---

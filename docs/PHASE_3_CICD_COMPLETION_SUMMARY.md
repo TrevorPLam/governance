@@ -296,7 +296,7 @@ See templates in `templates/ci-cd/` and follow inline documentation.
 
 ## Related Documents
 
-- [PHASE_3_TOOLING_AUTOMATION_TODO.md](../PHASE_3_TOOLING_AUTOMATION_TODO.md) - Full Phase 3 plan
+- [planning/roadmap/PHASE_3_TOOLING_AUTOMATION_TODO.md](../planning/roadmap/PHASE_3_TOOLING_AUTOMATION_TODO.md) - Full Phase 3 plan
 - [.github/workflows/templates/README.md](../.github/workflows/templates/README.md) - Workflow documentation
 - [docs/guides/HOW_TO_INTEGRATE_CI_CD.md](../docs/guides/HOW_TO_INTEGRATE_CI_CD.md) - Integration guide (to be created)
 

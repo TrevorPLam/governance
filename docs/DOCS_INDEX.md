@@ -4,7 +4,7 @@ Complete guide to the AI-Native Governance System documentation.
 
 **Last Updated:** 2026-01-22  
 **Documentation Version:** 1.0.0  
-**Total Documents:** 46
+**Total Documents:** 54
 
 ---
 
@@ -25,6 +25,8 @@ Complete guide to the AI-Native Governance System documentation.
 - **[CLI Reference](reference/CLI_REFERENCE.md)** - Complete command reference
 - **[Manifest Reference](reference/MANIFEST_REFERENCE.md)** - Configuration schema
 - **[Policy Reference](reference/POLICY_REFERENCE.md)** - All governance policies
+- **[Maturity Model](MATURITY_MODEL.md)** - Governance maturity criteria
+- **[Metrics Guide](METRICS_GUIDE.md)** - Governance metrics collection
 
 ---
 
@@ -62,7 +64,7 @@ Step-by-step instructions for common tasks.
 
 ---
 
-### 3. Reference Documentation (5 docs)
+### 3. Reference Documentation (7 docs)
 
 Complete technical references.
 
@@ -73,8 +75,10 @@ Complete technical references.
 | [POLICY_REFERENCE.md](reference/POLICY_REFERENCE.md) | All governance policies | Policy details |
 | [PRINCIPLES_REFERENCE.md](reference/PRINCIPLES_REFERENCE.md) | All 25 principles (P1-P25) | Principle lookup |
 | [API_REFERENCE.md](reference/API_REFERENCE.md) | Programmatic API reference | Integration |
+| [MATURITY_MODEL.md](MATURITY_MODEL.md) | Governance maturity levels and criteria | Assessment |
+| [METRICS_GUIDE.md](METRICS_GUIDE.md) | Governance metrics usage and thresholds | Measurement |
 
-**Total:** 5 documents
+**Total:** 7 documents
 
 ---
 
@@ -173,7 +177,7 @@ Historical implementation summaries.
 
 ---
 
-### 10. Testing and Validation Reports (2 docs)
+### 10. Testing and Validation Reports (3 docs)
 
 Template validation and testing.
 
@@ -181,24 +185,42 @@ Template validation and testing.
 |----------|-------------|
 | [template-injection-test-report.md](template-injection-test-report.md) | Template injection testing |
 | [tier2-template-validation.md](tier2-template-validation.md) | Tier 2 validation |
+| [TESTING_STRATEGY.md](TESTING_STRATEGY.md) | Testing scope and coverage targets |
 
-**Total:** 2 documents
+**Total:** 3 documents
+
+---
+
+### 11. Release and Community (5 docs)
+
+Launch, training, and sustainability.
+
+| Document | Description |
+|----------|-------------|
+| [TRAINING_MATERIALS.md](TRAINING_MATERIALS.md) | Training tracks and exercises |
+| [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) | v1.0 release checklist |
+| [COMMUNITY_GUIDE.md](COMMUNITY_GUIDE.md) | Community collaboration guide |
+| [MAINTENANCE_PLAN.md](MAINTENANCE_PLAN.md) | Long-term maintenance plan |
+| [V2_ROADMAP.md](V2_ROADMAP.md) | Draft v2.0 roadmap |
+
+**Total:** 5 documents
 
 ---
 
 ## 📊 Documentation Statistics
 
-- **Total Documents:** 46
+- **Total Documents:** 54
 - **Getting Started:** 4 docs
 - **How-To Guides:** 6 docs
-- **Reference Docs:** 5 docs
+- **Reference Docs:** 7 docs
 - **Architecture:** 4 docs
 - **Visual Diagrams:** 10 docs
 - **Playbooks:** 4 docs
 - **Problem-Solving:** 3 docs
 - **Implementation:** 1 doc
 - **Summaries:** 7 docs
-- **Reports:** 2 docs
+- **Reports:** 3 docs
+- **Release & Community:** 5 docs
 
 **Total Words:** ~200,000 words  
 **Total Pages:** ~700 pages (estimated)
@@ -330,7 +352,7 @@ For those who prefer diagrams:
 ### Additional Reading
 - Main README: [/README.md](/README.md)
 - Contributing: [/CONTRIBUTING.md](/CONTRIBUTING.md)
-- Master Roadmap: [/MASTER_IMPLEMENTATION_ROADMAP_TODO.md](/MASTER_IMPLEMENTATION_ROADMAP_TODO.md)
+- Master Roadmap: [/planning/roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md](/planning/roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md)
 
 ---
 
@@ -354,3 +376,4 @@ For those who prefer diagrams:
 
 **Last Updated:** 2026-01-22  
 **Version:** 1.0.0
+

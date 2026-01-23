@@ -147,6 +147,14 @@ Key configuration files:
   - Verification profiles
   - Boundaries and security settings
 
+- **[metrics.config.json](../metrics/metrics.config.json)** - Governance metrics settings
+  - Retention and thresholds
+  - Local-only metrics collection
+
+- **[HITL Tracking](../hitl/README.md)** - Human-in-the-loop records
+- **[Waiver Tracking](../waivers/README.md)** - Waiver lifecycle records
+- **[Audit Trail](../audit/README.md)** - Append-only audit log
+
 - **[VERSION](../VERSION)** - Governance framework version
 
 ## 📊 Getting Started Guides

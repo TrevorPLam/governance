@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "retention_days": 90,
+  "thresholds": {
+    "policy_coverage_min": 0.95,
+    "manifest_placeholders_max": 0,
+    "waiver_active_max": 5,
+    "hitl_active_max": 3
+  }
+}

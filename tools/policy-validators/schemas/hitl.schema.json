@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HITL Escalation",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["hitl_id", "status", "summary", "created_at"],
+    "properties": {
+      "hitl_id": { "type": "string" },
+      "status": { "type": "string" },
+      "summary": { "type": "string" },
+      "risk": { "type": "string" },
+      "created_at": { "type": "string", "format": "date-time" },
+      "resolved_at": { "type": "string", "format": "date-time" }
+    },
+    "additionalProperties": true
+  }
+}

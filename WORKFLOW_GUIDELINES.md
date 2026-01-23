@@ -272,7 +272,7 @@ Add to deviation request file:
 **Scenario:** Starting Phase 1, Task 1.1
 
 ✅ **Correct Approach:**
-1. Read PHASE_1_FOUNDATION_TODO.md completely
+1. Read planning/roadmap/PHASE_1_FOUNDATION_TODO.md completely
 2. Review related files in `00. Implementation/`
 3. Document pre-execution assessment
 4. Verify prerequisites (none for first task)
@@ -352,3 +352,4 @@ Add to deviation request file:
 
 **Status:** Active and required for all work on this repository  
 **Exceptions:** None without explicit approval from repository owner
+

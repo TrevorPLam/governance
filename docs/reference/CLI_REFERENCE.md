@@ -3,7 +3,7 @@
 
 **Purpose:** Complete reference documentation for the Governance CLI tool - your command-line interface for AI-Native repository governance automation.
 
-**Last Updated:** 2024  
+**Last Updated:** 2026-01-22  
 **Version:** 1.0.0
 
 ---
@@ -19,6 +19,12 @@
    - [governance verify](#governance-verify)
    - [governance check-updates](#governance-check-updates)
    - [governance update](#governance-update)
+   - [governance migrate](#governance-migrate)
+   - [governance lint](#governance-lint)
+   - [governance hitl](#governance-hitl)
+   - [governance waiver](#governance-waiver)
+   - [governance metrics](#governance-metrics)
+   - [governance maturity-check](#governance-maturity-check)
 5. [Exit Codes](#exit-codes)
 6. [Configuration](#configuration)
 7. [Environment Variables](#environment-variables)
@@ -55,11 +61,12 @@ The Governance CLI is a command-line tool that automates the injection, validati
 ├─────────────────────────────────────────────┤
 │                                             │
 │  Commands:                                  │
-│  ├─ init         → Initialize governance   │
-│  ├─ validate     → Validate configuration   │
-│  ├─ verify       → Run verification checks  │
-│  ├─ check-updates→ Check for updates        │
-│  └─ update       → Update framework         │
+│  ├─ init          → Initialize governance   │
+│  ├─ validate      → Validate configuration  │
+│  ├─ verify        → Run verification checks │
+│  ├─ check-updates → Check for updates       │
+│  ├─ update        → Update framework        │
+│  └─ maturity-check→ Assess maturity level   │
 │                                             │
 │  Features:                                  │
 │  ├─ Auto-detection (npm, pip, maven, etc.) │
@@ -213,8 +220,10 @@ your-project/
 │   ├── templates/                 # Document templates (Standard+)
 │   ├── docs/                      # Documentation (Standard+)
 │   ├── automation/                # Scripts (Complete)
+│   ├── metrics/                   # Metrics config + reports
 │   ├── hitl/                      # HITL tracking
 │   ├── waivers/                   # Waiver tracking
+│   ├── audit/                     # Audit trail
 │   └── archive/                   # Backups
 ├── P0TODO.md                      # Priority 0 tasks
 ├── P1TODO.md                      # Priority 1 tasks
@@ -1097,6 +1106,191 @@ git commit -m "Update governance to v1.3.0"
 
 ---
 
+### `governance migrate`
+
+Apply governance migrations to enable new framework features.
+
+#### Synopsis
+
+```bash
+governance migrate [--dry-run]
+```
+
+#### Options
+
+| Option | Description |
+|--------|-------------|
+| `--dry-run` | Show pending migrations without changes |
+
+#### Examples
+
+```bash
+governance migrate --dry-run
+governance migrate
+```
+
+---
+
+### `governance lint`
+
+Run policy validators and governance linters.
+
+#### Synopsis
+
+```bash
+governance lint [options]
+```
+
+#### Options
+
+| Option | Description |
+|--------|-------------|
+| `--schema` | Run JSON schema validators |
+| `--regex` | Run regex-based linters |
+| `--opa` | Run OPA policy validators |
+| `--all` | Run all validators (default if no option provided) |
+| `--verbose` | Show detailed output |
+
+#### Examples
+
+```bash
+governance lint
+governance lint --schema
+governance lint --regex
+governance lint --opa
+governance lint --all --verbose
+```
+
+---
+
+### `governance hitl`
+
+Manage Human-in-the-Loop (HITL) items.
+
+#### Synopsis
+
+```bash
+governance hitl <command> [options]
+```
+
+#### Subcommands
+
+```bash
+governance hitl list
+governance hitl create --summary "Review auth flow" --risk high
+governance hitl assign --id HITL-001 --owner "security-team"
+governance hitl resolve --id HITL-001 --resolution "Approved"
+governance hitl report --format markdown --output ./hitl-report.md
+```
+
+---
+
+### `governance waiver`
+
+Manage governance waivers.
+
+#### Synopsis
+
+```bash
+governance waiver <command> [options]
+```
+
+#### Subcommands
+
+```bash
+governance waiver request --policy SECURITY_BASELINE --reason "Legacy integration" --expires-at 2026-06-01T00:00:00Z
+governance waiver approve --id WVR-001 --approver "security-lead"
+governance waiver reject --id WVR-001 --reason "Insufficient justification"
+governance waiver extend --id WVR-001 --expires-at 2026-09-01T00:00:00Z
+governance waiver analytics
+governance waiver export --format json --output ./waivers.json
+```
+
+---
+
+### `governance metrics`
+
+Collect and report governance metrics.
+
+#### Synopsis
+
+```bash
+governance metrics <command> [options]
+```
+
+#### Subcommands
+
+**Collect metrics**
+```bash
+governance metrics collect [--verbose]
+```
+
+**Report metrics**
+```bash
+governance metrics report [--format text|json|markdown]
+```
+
+**Run local dashboard**
+```bash
+governance metrics dashboard [--port 3579]
+```
+
+#### Options
+
+| Command | Option | Alias | Description |
+|---------|--------|-------|-------------|
+| collect | `--verbose` | `-v` | Show detailed metrics output |
+| report | `--format <format>` | `-f` | Output format: text, json, markdown |
+| dashboard | `--port <port>` | `-p` | Dashboard port (default 3579) |
+
+---
+
+### `governance maturity-check`
+
+Assess governance maturity level for the current repository.
+
+#### Synopsis
+
+```bash
+governance maturity-check [options]
+```
+
+#### Description
+
+Evaluates maturity criteria and reports the current level, gaps, and next-level requirements.
+
+#### Options
+
+| Option | Alias | Type | Default | Description |
+|--------|-------|------|---------|-------------|
+| `--json` | | boolean | false | Output report as JSON |
+| `--report <path>` | `-r` | string | | Write JSON report to a file |
+| `--verbose` | `-v` | boolean | false | Show detailed criteria results |
+
+#### Examples
+
+```bash
+governance maturity-check
+governance maturity-check --verbose
+governance maturity-check --report ./maturity-report.json
+governance maturity-check --json
+```
+
+#### Output (Summary)
+
+```
+📊 Governance CLI - Maturity Check
+
+Project root: /path/to/project
+Criteria version: 1.0.0
+Current maturity: Level 2 - Managed
+Next target: Level 3 - Defined
+
+Summary: 6 passed, 2 failed
+```
+
+---
+
 ## Exit Codes
 
 All CLI commands follow standard Unix exit code conventions:
@@ -1965,42 +2159,6 @@ curl -X POST "$SLACK_WEBHOOK_URL" \
 
 The following commands are planned for future releases:
 
-### `governance hitl` (Planned)
-
-Manage Human-in-the-Loop (HITL) items.
-
-```bash
-# List HITL items
-governance hitl list
-
-# Create HITL item
-governance hitl create --type=security --description="Review auth implementation"
-
-# Resolve HITL item
-governance hitl resolve <id>
-
-# Export HITL report
-governance hitl report --format=markdown
-```
-
-### `governance waiver` (Planned)
-
-Manage policy waivers.
-
-```bash
-# List waivers
-governance waiver list
-
-# Create waiver
-governance waiver create --policy=SECURITY_BASELINE --reason="Legacy code"
-
-# Approve waiver
-governance waiver approve <id>
-
-# Check expired waivers
-governance waiver check-expiry
-```
-
 ### `governance security` (Planned)
 
 Run security checks and scans.
@@ -2097,6 +2255,14 @@ Governance was initialized with: governance init --tier=standard
 | `governance verify` | Run verification checks | 5-30s | 0, 1 |
 | `governance check-updates` | Check for updates | 2-3s | 0, 1 |
 | `governance update` | Update framework | 10-20s | 0, 1 |
+| `governance migrate` | Apply governance migrations | 5-15s | 0, 1 |
+| `governance lint` | Run policy validators | 2-5s | 0, 1 |
+| `governance hitl` | Manage HITL items | 1-3s | 0, 1 |
+| `governance waiver` | Manage waivers | 1-3s | 0, 1 |
+| `governance metrics collect` | Collect governance metrics | 2-5s | 0, 1 |
+| `governance metrics report` | Report governance metrics | 1-2s | 0, 1 |
+| `governance metrics dashboard` | Run local metrics dashboard | 1-2s | 0, 1 |
+| `governance maturity-check` | Assess maturity level | 2-5s | 0, 1 |
 
 ### File Structure Reference
 
@@ -2123,8 +2289,10 @@ Governance was initialized with: governance init --tier=standard
 │   ├── standards/
 │   └── adr/
 ├── automation/                # Automation scripts (Complete)
+├── metrics/                   # Metrics config + reports (Layer 1)
 ├── hitl/                      # Human-in-the-loop tracking (Layer 1)
 ├── waivers/                   # Policy waivers (Layer 1)
+├── audit/                     # Audit trail (Layer 1)
 └── archive/                   # Backups and archives
 ```
 
@@ -2132,7 +2300,7 @@ Governance was initialized with: governance init --tier=standard
 
 | Layer | Files | Update Behavior |
 |-------|-------|-----------------|
-| **Layer 1** (Custom) | Manifest, HITL, Waivers, ADRs | Always preserved |
+| **Layer 1** (Custom) | Manifest, HITL, Waivers, Metrics, Audit, ADRs | Always preserved |
 | **Layer 2** (Updateable) | Policies, Standards | Updated on `governance update` |
 | **Layer 3** (Immutable) | Templates, Automation | Updated on `governance update` |
 
@@ -2150,5 +2318,5 @@ Governance was initialized with: governance init --tier=standard
 ---
 
 **Document Version:** 1.0.0  
-**Last Updated:** 2024  
+**Last Updated:** 2026-01-22  
 **Maintained By:** Governance Framework Team

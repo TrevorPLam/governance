@@ -633,7 +633,7 @@ Create one-page guides for common scenarios:
 
 - `00. Implementation/phase1-9.md` - Complete specs
 - `INJECTABLE_FRAMEWORK_PLANNING_GUIDE.md` - Detailed planning
-- `EXECUTIVE_SUMMARY.md` - High-level overview
+- `analysis/EXECUTIVE_SUMMARY.md` - High-level overview
 - This document - Action checklist
 
 ---

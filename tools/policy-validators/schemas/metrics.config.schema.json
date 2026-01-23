@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Governance Metrics Config",
+  "type": "object",
+  "required": ["version", "retention_days", "thresholds"],
+  "properties": {
+    "version": { "type": "string" },
+    "retention_days": { "type": "number", "minimum": 1 },
+    "thresholds": {
+      "type": "object",
+      "required": [
+        "policy_coverage_min",
+        "manifest_placeholders_max",
+        "waiver_active_max",
+        "hitl_active_max"
+      ],
+      "properties": {
+        "policy_coverage_min": { "type": "number", "minimum": 0, "maximum": 1 },
+        "manifest_placeholders_max": { "type": "number", "minimum": 0 },
+        "waiver_active_max": { "type": "number", "minimum": 0 },
+        "hitl_active_max": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

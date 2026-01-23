@@ -74,6 +74,46 @@ Run governance verification checks.
 governance verify --profile=ci
 ```
 
+### `governance lint`
+Run policy validators and governance linters.
+
+**Examples:**
+```bash
+governance lint
+governance lint --schema
+governance lint --regex
+```
+
+### `governance hitl`
+Manage Human-in-the-Loop items.
+
+**Examples:**
+```bash
+governance hitl list
+governance hitl create --summary "Review auth flow" --risk high
+governance hitl resolve --id HITL-001 --resolution "Approved"
+```
+
+### `governance waiver`
+Manage governance waivers.
+
+**Examples:**
+```bash
+governance waiver request --policy SECURITY_BASELINE --reason "Legacy integration" --expires-at 2026-06-01T00:00:00Z
+governance waiver approve --id WVR-001 --approver "security-lead"
+governance waiver analytics
+```
+
+### `governance metrics`
+Collect and report governance metrics.
+
+**Examples:**
+```bash
+governance metrics collect
+governance metrics report --format json
+governance metrics dashboard --port 3579
+```
+
 ### `governance check-updates`
 Check for governance framework updates.
 
@@ -94,6 +134,27 @@ Update governance framework to latest version.
 ```bash
 governance update --dry-run
 governance update
+```
+
+### `governance migrate`
+Apply governance migrations for new framework features.
+
+**Example:**
+```bash
+governance migrate --dry-run
+```
+
+### `governance maturity-check`
+Assess governance maturity level for the current repository.
+
+**Options:**
+- `--json` - Output report as JSON
+- `-r, --report <path>` - Write JSON report to a file
+- `-v, --verbose` - Show detailed criteria results
+
+**Example:**
+```bash
+governance maturity-check --verbose
 ```
 
 ## Governance Tiers

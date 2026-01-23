@@ -376,7 +376,7 @@ All diagrams created using Mermaid.js with comprehensive explanations:
 - [Phase 3 Completion](PHASE_3_CORE_CLI_SUMMARY.md)
 
 ### Planning Documents
-- [Master Roadmap](../MASTER_IMPLEMENTATION_ROADMAP_TODO.md)
+- [Master Roadmap](../planning/roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md)
 - [Phase 4 TODO](../PHASE_4_DOCUMENTATION_EXAMPLES_TODO.md)
 - [Phase 5 TODO](../PHASE_5_ADVANCED_FEATURES_TODO.md)
 
@@ -428,3 +428,4 @@ Phase 4 is complete and the governance system is now well-documented, easy to ad
 **Version:** 1.0.0  
 **Last Updated:** 2026-01-22  
 **Next Phase:** Phase 5 - Advanced Features
+

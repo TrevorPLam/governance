@@ -1,0 +1,202 @@
+{
+  "version": "1.0.0",
+  "levels": [
+    {
+      "level": 0,
+      "name": "Ad-Hoc",
+      "description": "No governance artifacts detected.",
+      "criteria": []
+    },
+    {
+      "level": 1,
+      "name": "Basic",
+      "description": "Core governance framework is present and usable.",
+      "criteria": [
+        {
+          "id": "repo_folder",
+          "description": "Governance root folder exists",
+          "checks": [{ "type": "dir", "path": ".repo" }]
+        },
+        {
+          "id": "core_policies",
+          "description": "Core policy files exist",
+          "checks": [
+            {
+              "type": "files",
+              "paths": [
+                ".repo/policy/CONSTITUTION.md",
+                ".repo/policy/PRINCIPLES.md",
+                ".repo/policy/QUALITY_GATES.md",
+                ".repo/policy/SECURITY_BASELINE.md",
+                ".repo/policy/BOUNDARIES.md",
+                ".repo/policy/HITL.md",
+                ".repo/policy/WAIVERS.md"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "core_entry_files",
+          "description": "Entry point, manifest, and version exist",
+          "checks": [
+            {
+              "type": "files",
+              "paths": [
+                ".repo/GOVERNANCE.md",
+                ".repo/repo.manifest.yaml",
+                ".repo/VERSION"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "root_todos",
+          "description": "Root TODO files exist",
+          "checks": [
+            {
+              "type": "files",
+              "paths": ["P0TODO.md", "P1TODO.md", "P2TODO.md", "COMPLETEDTODO.md"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "name": "Managed",
+      "description": "Agents, templates, and documentation standards are present.",
+      "criteria": [
+        {
+          "id": "agent_framework",
+          "description": "Agent framework files exist",
+          "checks": [
+            {
+              "type": "files",
+              "paths": [
+                ".repo/agents/AGENTS.md",
+                ".repo/agents/capabilities.md",
+                ".repo/agents/roles/primary.md",
+                ".repo/agents/roles/secondary.md",
+                ".repo/agents/roles/reviewer.md",
+                ".repo/agents/roles/release.md",
+                ".repo/agents/prompts/task_packet.md",
+                ".repo/agents/prompts/pr_template.md",
+                ".repo/agents/checklists/change-plan.md",
+                ".repo/agents/checklists/pr-review.md",
+                ".repo/agents/checklists/incident.md"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "document_templates",
+          "description": "Document templates and schemas exist",
+          "checks": [
+            {
+              "type": "files",
+              "paths": [
+                ".repo/templates/AGENT_LOG_TEMPLATE.md",
+                ".repo/templates/AGENT_TRACE_SCHEMA.json",
+                ".repo/templates/PR_TEMPLATE.md",
+                ".repo/templates/WAIVER_TEMPLATE.md",
+                ".repo/templates/ADR_TEMPLATE.md",
+                ".repo/templates/RUNBOOK_TEMPLATE.md",
+                ".repo/templates/RFC_TEMPLATE.md"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "docs_standards",
+          "description": "Documentation standards and ADR examples exist",
+          "checks": [
+            {
+              "type": "files",
+              "paths": [
+                ".repo/docs/DOCS_INDEX.md",
+                ".repo/docs/standards/manifest.md",
+                ".repo/docs/standards/documentation.md",
+                ".repo/docs/standards/adr.md",
+                ".repo/docs/standards/api.md",
+                ".repo/docs/standards/style.md",
+                ".repo/docs/adr/README.md",
+                ".repo/docs/adr/0001-example.md"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "automation_structure",
+          "description": "Automation folders exist",
+          "checks": [
+            {
+              "type": "dirs",
+              "paths": [".repo/automation/ci", ".repo/automation/scripts"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "name": "Defined",
+      "description": "Governance is fully configured with automation and verified commands.",
+      "criteria": [
+        {
+          "id": "manifest_configured",
+          "description": "Manifest placeholders are resolved",
+          "checks": [
+            {
+              "type": "file_not_contains",
+              "path": ".repo/repo.manifest.yaml",
+              "patterns": ["<FILL_FROM_REPO>", "<UNKNOWN>"]
+            }
+          ]
+        },
+        {
+          "id": "automation_configured",
+          "description": "Automation directories contain files",
+          "checks": [
+            { "type": "dir_has_files", "path": ".repo/automation/ci" },
+            { "type": "dir_has_files", "path": ".repo/automation/scripts" }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 4,
+      "name": "Optimizing",
+      "description": "Enterprise governance with metrics, HITL, and waiver automation.",
+      "criteria": [
+        {
+          "id": "metrics_enabled",
+          "description": "Metrics configuration exists",
+          "checks": [
+            { "type": "files", "paths": [".repo/metrics/metrics.config.json"] }
+          ]
+        },
+        {
+          "id": "hitl_tracking",
+          "description": "HITL tracking directory exists",
+          "checks": [
+            { "type": "dir", "path": ".repo/hitl" }
+          ]
+        },
+        {
+          "id": "waiver_tracking",
+          "description": "Waiver tracking directory exists",
+          "checks": [
+            { "type": "dir", "path": ".repo/waivers" }
+          ]
+        },
+        {
+          "id": "audit_trail",
+          "description": "Governance audit trail directory exists",
+          "checks": [
+            { "type": "dir", "path": ".repo/audit" }
+          ]
+        }
+      ]
+    }
+  ]
+}

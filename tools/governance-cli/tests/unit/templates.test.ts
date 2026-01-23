@@ -34,4 +34,21 @@ describe('Template Utilities', () => {
       expect(fs.existsSync(filePath)).toBe(true);
     }
   });
+
+  it('should include advanced governance folders', () => {
+    const repoTemplateDir = getRepoTemplateDir();
+    const expectedPaths = [
+      'metrics/metrics.config.json',
+      'hitl/active.json',
+      'hitl/archive.json',
+      'waivers/active.json',
+      'waivers/archive.json',
+      'audit/audit.log.jsonl',
+    ];
+
+    for (const relativePath of expectedPaths) {
+      const filePath = path.join(repoTemplateDir, relativePath);
+      expect(fs.existsSync(filePath)).toBe(true);
+    }
+  });
 });

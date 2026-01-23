@@ -48,7 +48,7 @@ By the end of onboarding, new team members should be able to:
 #### 1-2 Weeks Before Start Date
 
 - [ ] **Review Governance Documentation**
-  - Read [EXECUTIVE_SUMMARY.md](/EXECUTIVE_SUMMARY.md)
+  - Read [EXECUTIVE_SUMMARY.md](/planning/analysis/EXECUTIVE_SUMMARY.md)
   - Review [Getting Started guides](/docs/getting-started/)
   - Familiarize with [Architecture docs](/docs/architecture/)
 
@@ -109,7 +109,7 @@ By the end of onboarding, new team members should be able to:
   - High-level architecture tour
 
 **Resources:**
-- [EXECUTIVE_SUMMARY.md](/EXECUTIVE_SUMMARY.md)
+- [EXECUTIVE_SUMMARY.md](/planning/analysis/EXECUTIVE_SUMMARY.md)
 - [CONCEPTS_OVERVIEW.md](/docs/getting-started/CONCEPTS_OVERVIEW.md)
 
 #### System Architecture (1 hour)
@@ -557,7 +557,7 @@ By the end of onboarding, new team members should be able to:
 ### Essential Reading
 
 **Week 1:**
-- [EXECUTIVE_SUMMARY.md](/EXECUTIVE_SUMMARY.md)
+- [EXECUTIVE_SUMMARY.md](/planning/analysis/EXECUTIVE_SUMMARY.md)
 - [CONCEPTS_OVERVIEW.md](/docs/getting-started/CONCEPTS_OVERVIEW.md)
 - [QUICK_START.md](/docs/getting-started/QUICK_START.md)
 - [YOUR_FIRST_PR.md](/docs/getting-started/YOUR_FIRST_PR.md)

@@ -14,15 +14,15 @@
 - **Current Task Number:** Task 2
 
 ### Files Reviewed
-- [x] PHASE_1_FOUNDATION_TODO.md (lines 35-86)
+- [x] planning/roadmap/PHASE_1_FOUNDATION_TODO.md (lines 35-86)
 - [x] 00. Implementation/phase2.md (full file)
 - [x] templates/.repo/policy/ directory (created, empty)
 - [x] WORKFLOW_GUIDELINES.md
 
 ### Related Documentation
-- [x] Phase document: PHASE_1_FOUNDATION_TODO.md
+- [x] Phase document: planning/roadmap/PHASE_1_FOUNDATION_TODO.md
 - [x] Implementation specs: 00. Implementation/phase2.md
-- [x] Related planning docs: FRAMEWORK_RESTRUCTURING_PLAN.md
+- [x] Related planning docs: planning/FRAMEWORK_RESTRUCTURING_PLAN.md
 - [x] WORKFLOW_GUIDELINES.md
 
 ---

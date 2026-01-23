@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Governance Metrics Report",
+  "type": "object",
+  "required": ["version", "generated_at", "repository_root", "compliance", "quality", "velocity", "agent"],
+  "properties": {
+    "version": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "repository_root": { "type": "string" },
+    "compliance": {
+      "type": "object",
+      "required": ["policy_coverage", "policies_present", "policies_required", "manifest_placeholders", "hitl_active", "waivers_active"],
+      "properties": {
+        "policy_coverage": { "type": "number", "minimum": 0, "maximum": 1 },
+        "policies_present": { "type": "number", "minimum": 0 },
+        "policies_required": { "type": "number", "minimum": 0 },
+        "manifest_placeholders": { "type": "number", "minimum": 0 },
+        "hitl_active": { "type": "number", "minimum": 0 },
+        "waivers_active": { "type": "number", "minimum": 0 }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": ["docs_present", "automation_present", "agent_framework_present", "test_coverage"],
+      "properties": {
+        "docs_present": { "type": "boolean" },
+        "automation_present": { "type": "boolean" },
+        "agent_framework_present": { "type": "boolean" },
+        "test_coverage": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+      }
+    },
+    "velocity": {
+      "type": "object",
+      "required": ["pr_merge_time_hours", "build_success_rate", "deployment_frequency_per_week"],
+      "properties": {
+        "pr_merge_time_hours": { "type": ["number", "null"], "minimum": 0 },
+        "build_success_rate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "deployment_frequency_per_week": { "type": ["number", "null"], "minimum": 0 }
+      }
+    },
+    "agent": {
+      "type": "object",
+      "required": ["agent_logs_present", "agent_trace_schema_present", "agent_success_rate"],
+      "properties": {
+        "agent_logs_present": { "type": "boolean" },
+        "agent_trace_schema_present": { "type": "boolean" },
+        "agent_success_rate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

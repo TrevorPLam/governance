@@ -25,8 +25,8 @@ This repository has **strict workflow requirements** that all contributors must 
 
 Before contributing, understand the project:
 
-1. **Start Here:** [PLANNING_START_HERE.md](PLANNING_START_HERE.md)
-2. **Review Roadmap:** [MASTER_IMPLEMENTATION_ROADMAP_TODO.md](MASTER_IMPLEMENTATION_ROADMAP_TODO.md)
+1. **Start Here:** [planning/PLANNING_START_HERE.md](planning/PLANNING_START_HERE.md)
+2. **Review Roadmap:** [planning/roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md](planning/roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md)
 3. **Understand Current Phase:** Check which phase is currently being worked on
 
 ### Step 2: Read Workflow Guidelines
@@ -41,7 +41,7 @@ This document explains:
 
 ### Step 3: Find Your Task
 
-1. Check the current phase document (e.g., `PHASE_1_FOUNDATION_TODO.md`)
+1. Check the current phase document (e.g., `planning/roadmap/PHASE_1_FOUNDATION_TODO.md`)
 2. Find the next uncompleted task (first `[ ]` checkbox)
 3. Verify prerequisites are met
 4. Ensure no one else is working on it
@@ -176,7 +176,7 @@ This is primarily a documentation and template repository. No special setup requ
 
 **Phase:** [e.g., Phase 1: Foundation]
 **Task:** [e.g., 1.2 - Build Policy Files]
-**Document:** [e.g., PHASE_1_FOUNDATION_TODO.md]
+**Document:** [e.g., planning/roadmap/PHASE_1_FOUNDATION_TODO.md]
 
 ## Pre-Execution Assessment
 
@@ -245,7 +245,7 @@ Use template from WORKFLOW_GUIDELINES.md
 
 If approved:
 1. Update relevant phase documents
-2. Update MASTER_IMPLEMENTATION_ROADMAP_TODO.md if needed
+2. Update planning/roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md if needed
 3. Note deviation in PR description
 
 ---
@@ -317,9 +317,9 @@ Significant contributions may result in:
 ### Resources
 
 1. **Documentation:**
-   - [PLANNING_START_HERE.md](PLANNING_START_HERE.md) - Overview and navigation
+   - [planning/PLANNING_START_HERE.md](planning/PLANNING_START_HERE.md) - Overview and navigation
    - [WORKFLOW_GUIDELINES.md](WORKFLOW_GUIDELINES.md) - Required workflow
-   - [MASTER_IMPLEMENTATION_ROADMAP_TODO.md](MASTER_IMPLEMENTATION_ROADMAP_TODO.md) - Overall plan
+   - [planning/roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md](planning/roadmap/MASTER_IMPLEMENTATION_ROADMAP_TODO.md) - Overall plan
    - Phase documents - Specific task details
 
 2. **Support:**
@@ -362,4 +362,4 @@ Your contributions help make this project better for everyone. We appreciate you
 
 **Questions?** Create an issue with the `question` label.
 
-**Ready to contribute?** Start with [PLANNING_START_HERE.md](PLANNING_START_HERE.md)!
+**Ready to contribute?** Start with [planning/PLANNING_START_HERE.md](planning/PLANNING_START_HERE.md)!

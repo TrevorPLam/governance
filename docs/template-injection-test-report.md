@@ -104,7 +104,7 @@
 
 ### Phase 1 Success Criteria
 
-From PHASE_1_FOUNDATION_TODO.md:
+From planning/roadmap/PHASE_1_FOUNDATION_TODO.md:
 
 - [x] All 7 policy files exist in `templates/.repo/policy/`
 - [x] Manifest template exists with proper placeholders

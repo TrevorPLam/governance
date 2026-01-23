@@ -29,14 +29,16 @@ TrevorPLam/governance/
 │   ├── Research/                ← 4 AI platform analyses
 │   └── Products/                ← 172 feature recommendations
 │
-├── PHASE_1_FOUNDATION_TODO.md   ← TODOs for building THIS repo
-├── PHASE_2_CORE_FRAMEWORK_TODO.md
-├── PHASE_3_TOOLING_TODO.md
-├── ... (6 TODO files)
+├── planning/roadmap/            ← Roadmap and phase tracking
+│   ├── MASTER_IMPLEMENTATION_ROADMAP_TODO.md
+│   ├── PHASE_1_FOUNDATION_TODO.md
+│   ├── PHASE_2_CORE_FRAMEWORK_TODO.md
+│   ├── PHASE_3_TOOLING_AUTOMATION_TODO.md
+│   └── ... (6 TODO files)
 │
-└── Analysis Documents            ← Planning docs (already exist)
+└── planning/analysis/            ← Analysis docs
     ├── EXECUTIVE_SUMMARY.md
-    ├── REPOSITORY_ANALYSIS.md
+    ├── REPOSITORY_ANALYSIS_AND_RECOMMENDATIONS.md
     └── VISUAL_STRUCTURE_SUMMARY.md
 ```
 
@@ -173,7 +175,7 @@ TrevorPLam/governance/
 
 **CURRENT:**
 ```
-PHASE_1_FOUNDATION_TODO.md:
+planning/roadmap/PHASE_1_FOUNDATION_TODO.md:
 - [ ] Reorganize folder structure
 - [ ] Create central documentation hub
 - [ ] Improve README.md

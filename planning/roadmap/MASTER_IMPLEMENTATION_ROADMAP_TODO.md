@@ -399,10 +399,10 @@ Can parallelize (after Phase 2):
 ## 📚 Related Documents
 
 ### Root Analysis Documents (Read First)
-- [EXECUTIVE_SUMMARY.md](EXECUTIVE_SUMMARY.md) - High-level overview
-- [REPOSITORY_ANALYSIS_AND_RECOMMENDATIONS.md](REPOSITORY_ANALYSIS_AND_RECOMMENDATIONS.md) - Detailed analysis
-- [VISUAL_STRUCTURE_SUMMARY.md](VISUAL_STRUCTURE_SUMMARY.md) - Visual diagrams
-- [START_HERE_ANALYSIS_GUIDE.md](START_HERE_ANALYSIS_GUIDE.md) - Navigation guide
+- [../analysis/EXECUTIVE_SUMMARY.md](../analysis/EXECUTIVE_SUMMARY.md) - High-level overview
+- [../analysis/REPOSITORY_ANALYSIS_AND_RECOMMENDATIONS.md](../analysis/REPOSITORY_ANALYSIS_AND_RECOMMENDATIONS.md) - Detailed analysis
+- [../analysis/VISUAL_STRUCTURE_SUMMARY.md](../analysis/VISUAL_STRUCTURE_SUMMARY.md) - Visual diagrams
+- [../analysis/START_HERE_ANALYSIS_GUIDE.md](../analysis/START_HERE_ANALYSIS_GUIDE.md) - Navigation guide
 
 ### Implementation Phase Documents
 - [PHASE_1_FOUNDATION_TODO.md](PHASE_1_FOUNDATION_TODO.md)
@@ -420,7 +420,7 @@ Can parallelize (after Phase 2):
 ## ✅ How to Use This Roadmap
 
 ### For Decision Makers
-1. Read EXECUTIVE_SUMMARY.md first
+1. Read analysis/EXECUTIVE_SUMMARY.md first
 2. Review this roadmap for timeline and resources
 3. Decide on implementation path (A, B, C, or D)
 4. Allocate resources and set expectations
@@ -434,7 +434,7 @@ Can parallelize (after Phase 2):
 5. Track progress and adjust as needed
 
 ### For Developers
-1. Understand the vision (EXECUTIVE_SUMMARY.md)
+1. Understand the vision (analysis/EXECUTIVE_SUMMARY.md)
 2. Review the phase you're working on
 3. Follow the checklist in phase TODO
 4. Test thoroughly

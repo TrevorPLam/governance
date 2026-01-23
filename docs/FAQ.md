@@ -263,7 +263,7 @@ governance-cli validate
 1. **Creates folder structure:**
    - `.repo/policy/` - Governance policies
    - `.repo/agents/` - Agent configurations
-   - `.repo/tracking/` - HITL and waiver tracking
+   - `.repo/planning/roadmap/` - HITL and waiver tracking
 
 2. **Injects default policies:**
    - CONSTITUTION.md
@@ -1578,7 +1578,7 @@ quality_gates:
 # (Check your CI/CD platform)
 
 # Audit trail
-.repo/tracking/audit-trail.log
+.repo/planning/roadmap/audit-trail.log
 
 # View recent errors
 governance-cli logs --errors --tail 50
@@ -1834,3 +1834,4 @@ compliance = gov.verify()
 **Last Updated:** 2026-01-22  
 **Version:** 1.0.0  
 **Feedback:** [Open an issue](https://github.com/your-org/governance/issues) or [contribute](../CONTRIBUTING.md)
+

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Governance Metrics Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 24px;
+        color: #111;
+      }
+      header {
+        margin-bottom: 16px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 12px 16px;
+        background: #fafafa;
+      }
+      .label {
+        color: #555;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .value {
+        font-size: 20px;
+        margin-top: 6px;
+      }
+      pre {
+        background: #f4f4f4;
+        padding: 12px;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Governance Metrics Dashboard</h1>
+      <p id="generated">Loading metrics...</p>
+    </header>
+
+    <section class="grid" id="cards"></section>
+
+    <section>
+      <h2>Warnings</h2>
+      <ul id="warnings"></ul>
+    </section>
+
+    <section>
+      <h2>Raw Metrics</h2>
+      <pre id="raw"></pre>
+    </section>
+
+    <script>
+      async function loadMetrics() {
+        const response = await fetch('/metrics.json');
+        const data = await response.json();
+
+        if (data.error) {
+          document.getElementById('generated').textContent = data.error;
+          return;
+        }
+
+        document.getElementById('generated').textContent = `Generated: ${data.generated_at}`;
+
+        const cards = [
+          { label: 'Policy coverage', value: `${(data.compliance.policy_coverage * 100).toFixed(1)}%` },
+          { label: 'Manifest placeholders', value: data.compliance.manifest_placeholders },
+          { label: 'HITL active', value: data.compliance.hitl_active },
+          { label: 'Waivers active', value: data.compliance.waivers_active },
+          { label: 'Docs present', value: data.quality.docs_present ? 'yes' : 'no' },
+          { label: 'Automation present', value: data.quality.automation_present ? 'yes' : 'no' }
+        ];
+
+        const container = document.getElementById('cards');
+        container.innerHTML = '';
+        cards.forEach((item) => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `<div class="label">${item.label}</div><div class="value">${item.value}</div>`;
+          container.appendChild(card);
+        });
+
+        const warnings = document.getElementById('warnings');
+        warnings.innerHTML = '';
+        if (data.warnings && data.warnings.length > 0) {
+          data.warnings.forEach((warning) => {
+            const li = document.createElement('li');
+            li.textContent = warning;
+            warnings.appendChild(li);
+          });
+        } else {
+          warnings.innerHTML = '<li>None</li>';
+        }
+
+        document.getElementById('raw').textContent = JSON.stringify(data, null, 2);
+      }
+
+      loadMetrics();
+    </script>
+  </body>
+</html>
