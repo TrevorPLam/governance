@@ -53,28 +53,26 @@ Build the `governance-cli` tool that automates template injection, validation, a
   tools/governance-cli/
   ├── src/
   │   ├── commands/
+  │   │   ├── check-updates.ts
   │   │   ├── init.ts
-  │   │   ├── validate.ts
-  │   │   ├── verify.ts
   │   │   ├── update.ts
-  │   │   ├── waiver.ts
-  │   │   ├── hitl.ts
-  │   │   └── migrate.ts
-  │   ├── utils/
-  │   │   ├── files.ts
-  │   │   ├── manifest.ts
-  │   │   ├── templates.ts
-  │   │   └── git.ts
-  │   ├── validators/
-  │   │   ├── manifest-validator.ts
-  │   │   └── schema-validator.ts
+  │   │   ├── validate.ts
+  │   │   └── verify.ts
   │   ├── types/
   │   │   └── index.ts
+  │   ├── utils/
+  │   │   ├── files.ts
+  │   │   ├── git.ts
+  │   │   ├── manifest.ts
+  │   │   └── templates.ts
   │   └── cli.ts (main entry point)
   ├── bin/
   │   └── governance (executable)
-  ├── templates/ (symlink to ../../templates/)
-  └── package.json
+  ├── tests/
+  │   └── unit/
+  │       └── templates.test.ts
+  ├── package.json
+  └── tsconfig.json
   ```
 
 ### 2. Implement Core Commands
@@ -398,94 +396,22 @@ Next steps:
 
 ---
 
-**Status:** ✅ COMPLETE (Core + CI/CD Implementation)  
+**Status:** 🟡 IN PROGRESS (Core CLI complete; CI/CD partial)  
 **Last Updated:** 2026-01-22  
-**Completion Date:** 2026-01-22
+**Core Completion Date:** 2026-01-22
 
-**Note:** Phase 3 core objectives achieved. CLI tool and CI/CD automation complete and tested. Advanced features (boundary checker, validation tools, automation scripts) deferred to Phase 5 as originally planned. Phase 4-6 fully enabled.
+**Note:** Core CLI objectives achieved. CI/CD templates exist for GitLab/CircleCI/Jenkins/Azure with a GitHub Actions example in `examples/ci-cd/`. Advanced features (boundary checker, validators, helper commands, automation scripts) remain open.
 
 ---
 
-## Remaining Phase 3 Items (In Progress)
+## Remaining Phase 3 Items
 
 The following items are being completed:
-
-### 4. CI/CD Templates and Integrations ✅ COMPLETE
-**Goal:** Ready-to-use CI/CD configurations
-
-#### 4.1 GitHub Actions Workflows ✅
-- [x] Create .github/workflows/templates/ folder
-- [x] Create governance-check.yml:
-  - [x] Run on PR creation/update
-  - [x] Execute governance verify
-  - [x] Check boundaries
-  - [x] Validate manifest
-  - [x] Post results as comments
-  - [x] Block merge on failures (configurable)
-
-- [x] Create quality-gates.yml:
-  - [x] Run tests with coverage
-  - [x] Check coverage thresholds
-  - [x] Run linters
-  - [x] Verify build succeeds
-  - [x] Check documentation
-  - [x] Generate quality report
-
-- [x] Create security-scan.yml:
-  - [x] Dependency vulnerability scan
-  - [x] Secret scanning
-  - [x] SAST scanning
-  - [x] Container scanning (if applicable)
-  - [x] Generate security report
-  - [x] Block on critical issues
-
-- [x] Create release.yml:
-  - [x] Validate release readiness
-  - [x] Check all quality gates
-  - [x] Verify documentation updated
-  - [x] Generate release notes
-  - [x] Create GitHub release
-  - [x] Deploy artifacts
-
-#### 4.2 Reusable Workflow Components ✅
-- [x] Create composite actions:
-  - [x] governance-setup action
-  - [x] boundary-check action
-  - [x] quality-check action
-  - [x] security-check action
-
-- [x] Document workflow usage:
-  - [x] Create workflow guide (README.md)
-  - [x] Include configuration examples
-  - [x] Document customization options
-  - [x] Add troubleshooting section
-
-#### 4.3 Other CI/CD Platforms ✅
-- [x] Create templates for other platforms:
-  - [x] GitLab CI (.gitlab-ci.yml)
-  - [x] CircleCI (config.yml)
-  - [x] Jenkins (Jenkinsfile)
-  - [x] Azure Pipelines (azure-pipelines.yml)
-
-- [x] Document platform-specific setup:
-  - [x] Installation instructions (in templates)
-  - [x] Configuration guide (inline comments)
-  - [x] Example pipelines (working examples)
-
-### 5. Boundary Checker (Deferred to Phase 5)
-**Goal:** Automated dependency validation
-
-- [ ] Implement waiver checker:
-  - [ ] Validate active waivers
-  - [ ] Check expiration dates
-  - [ ] Verify waiver approvals
-  - [ ] Detect waiver abuse
-  - [ ] Generate waiver reports
 
 ### 4. CI/CD Templates and Integrations
 **Goal:** Ready-to-use CI/CD configurations
 
-#### 4.1 GitHub Actions Workflows
+#### 4.1 GitHub Actions Workflows (Example Only)
 - [ ] Create .github/workflows/templates/ folder
 - [ ] Create governance-check.yml:
   - [ ] Run on PR creation/update
@@ -519,34 +445,44 @@ The following items are being completed:
   - [ ] Create GitHub release
   - [ ] Deploy artifacts
 
+**Example:** `examples/ci-cd/github-actions-complete.yml` (full GitHub Actions pipeline sample)
+
 #### 4.2 Reusable Workflow Components
 - [ ] Create composite actions:
   - [ ] governance-setup action
   - [ ] boundary-check action
   - [ ] quality-check action
   - [ ] security-check action
-  - [ ] report-upload action
 
 - [ ] Document workflow usage:
-  - [ ] Create workflow guide
+  - [ ] Create workflow guide (README.md)
   - [ ] Include configuration examples
   - [ ] Document customization options
   - [ ] Add troubleshooting section
 
-#### 4.3 Other CI/CD Platforms
-- [ ] Create templates for other platforms:
-  - [ ] GitLab CI (.gitlab-ci.yml)
-  - [ ] CircleCI (config.yml)
-  - [ ] Jenkins (Jenkinsfile)
-  - [ ] Azure Pipelines (azure-pipelines.yml)
+#### 4.3 Other CI/CD Platforms ✅ COMPLETE
+- [x] Create templates for other platforms:
+  - [x] GitLab CI (`templates/ci-cd/gitlab-ci.yml`)
+  - [x] CircleCI (`templates/ci-cd/circleci-config.yml`)
+  - [x] Jenkins (`templates/ci-cd/Jenkinsfile`)
+  - [x] Azure Pipelines (`templates/ci-cd/azure-pipelines.yml`)
 
-- [ ] Document platform-specific setup:
-  - [ ] Installation instructions
-  - [ ] Configuration guide
-  - [ ] Example pipelines
-  - [ ] Migration guide
+- [x] Document platform-specific setup:
+  - [x] Installation instructions (`docs/guides/HOW_TO_INTEGRATE_CI_CD.md`)
+  - [x] Configuration guide (`docs/guides/HOW_TO_INTEGRATE_CI_CD.md`)
+  - [x] Example pipelines (`examples/ci-cd/`)
 
-### 5. Validation Tools
+### 5. Boundary Checker (Deferred to Phase 5)
+**Goal:** Automated dependency validation
+
+- [ ] Implement waiver checker:
+  - [ ] Validate active waivers
+  - [ ] Check expiration dates
+  - [ ] Verify waiver approvals
+  - [ ] Detect waiver abuse
+  - [ ] Generate waiver reports
+
+### 6. Validation Tools
 **Goal:** Standalone validators for specific aspects
 
 - [ ] Create tools/validators/ folder
@@ -578,7 +514,7 @@ The following items are being completed:
   - [ ] Validate decision trail
   - [ ] Generate log analysis
 
-### 6. Automation Scripts
+### 7. Automation Scripts
 **Goal:** Helpful scripts for common tasks
 
 - [ ] Create tools/scripts/ folder
@@ -603,7 +539,7 @@ The following items are being completed:
   - [ ] update-manifest-schema.sh
   - [ ] convert-old-waivers.sh
 
-### 7. Testing and Quality Assurance
+### 8. Testing and Quality Assurance
 **Goal:** Ensure tool reliability
 
 - [ ] Write unit tests:
@@ -634,7 +570,7 @@ The following items are being completed:
   - [ ] Sample violations
   - [ ] Sample reports
 
-### 8. Documentation and Distribution
+### 9. Documentation and Distribution
 **Goal:** Make tools easy to use and distribute
 
 - [ ] Create tool documentation:
@@ -739,16 +675,12 @@ The following items are being completed:
 
 ---
 
-**Status:** ✅ COMPLETE (Core + CI/CD Implementation)  
+**Status:** 🟡 IN PROGRESS (Core CLI complete; advanced features pending)  
 **Last Updated:** 2026-01-22  
-**Completion Date:** 2026-01-22  
+**Core Completion Date:** 2026-01-22  
 **Depends On:** PHASE_1_FOUNDATION_TODO.md ✅, PHASE_2_CORE_FRAMEWORK_TODO.md ✅
 
-**Summary:** Phase 3 core objectives complete. CLI tool working, CI/CD automation templates created for 5 platforms. Advanced features appropriately deferred to Phase 5-6 per original roadmap structure. Phase 4-6 fully enabled.  
-**Depends On:** PHASE_1_FOUNDATION_TODO.md, PHASE_2_CORE_FRAMEWORK_TODO.md
-
-**Summary:** 
-- ✅ Tasks 1-4 COMPLETE: CLI Infrastructure, Core Commands (init, validate, verify, check-updates, update), Testing & Packaging, NPM prep
-- ⏸️ Tasks 5-8 DEFERRED: Boundary Checker, CI/CD Templates, Validation Tools, Additional Automation (non-blocking for Phase 4+)
+**Summary:** Core CLI commands implemented (init, validate, verify, check-updates, update) with template injection/update working. CI/CD templates exist for GitLab/CircleCI/Jenkins/Azure and a GitHub Actions example is provided in `examples/ci-cd/`.  
+**Open Items:** Helper commands (waiver/hitl/doctor), schema validation, conflict detection, GitHub Actions templates/composite actions, validators, automation scripts, expanded tests, and distribution work.
 
 **Key Achievement:** Reduced governance injection time from 30-40 minutes to ~5 minutes (6-8x improvement)
