@@ -1,0 +1,504 @@
+# Agent Trace Schema
+<!-- GOVERNANCE_VERSION: 1.0.0 -->
+<!-- GOVERNANCE: UPDATEABLE - Layer 3 -->
+
+This JSON schema defines the structure for agent trace logs. Trace logs provide a structured, machine-readable record of agent actions for auditability and analysis.
+
+## JSON Schema
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://governance.example.com/schemas/agent-trace-v1.0.0.json",
+  "title": "Agent Trace Log",
+  "description": "Structured trace log for agent activities",
+  "type": "object",
+  "required": [
+    "trace_version",
+    "agent_info",
+    "task",
+    "intent",
+    "files",
+    "commands",
+    "evidence",
+    "hitl",
+    "unknowns"
+  ],
+  "properties": {
+    "trace_version": {
+      "type": "string",
+      "description": "Version of trace schema",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "examples": ["1.0.0"]
+    },
+    "agent_info": {
+      "type": "object",
+      "required": ["agent_role", "agent_id", "timestamp"],
+      "properties": {
+        "agent_role": {
+          "type": "string",
+          "enum": ["primary", "secondary"],
+          "description": "Role of the agent"
+        },
+        "agent_id": {
+          "type": "string",
+          "description": "Unique identifier for the agent"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 timestamp"
+        }
+      }
+    },
+    "task": {
+      "type": "object",
+      "required": ["task_id"],
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "description": "Reference to task packet"
+        },
+        "title": {
+          "type": "string",
+          "description": "Brief task title"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["P0", "P1", "P2"],
+          "description": "Task priority"
+        }
+      }
+    },
+    "intent": {
+      "type": "string",
+      "description": "What the agent intended to accomplish",
+      "minLength": 10
+    },
+    "files": {
+      "type": "array",
+      "description": "All files touched by agent",
+      "items": {
+        "type": "object",
+        "required": ["path", "action"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Full filepath"
+          },
+          "action": {
+            "type": "string",
+            "enum": ["created", "modified", "deleted", "read"],
+            "description": "Action performed on file"
+          },
+          "lines_changed": {
+            "type": "integer",
+            "description": "Number of lines changed",
+            "minimum": 0
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why file was modified"
+          }
+        }
+      }
+    },
+    "commands": {
+      "type": "array",
+      "description": "All commands executed by agent",
+      "items": {
+        "type": "object",
+        "required": ["command", "result"],
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Command that was run"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Verification profile name if applicable"
+          },
+          "result": {
+            "type": "string",
+            "enum": ["success", "failure", "partial"],
+            "description": "Command execution result"
+          },
+          "output": {
+            "type": "string",
+            "description": "Command output or error message"
+          },
+          "exit_code": {
+            "type": "integer",
+            "description": "Process exit code"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When command was executed"
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "description": "Evidence collected during execution",
+      "items": {
+        "type": "object",
+        "required": ["type", "result"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "test",
+              "build",
+              "lint",
+              "security",
+              "coverage",
+              "performance",
+              "manual"
+            ],
+            "description": "Type of evidence"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of evidence"
+          },
+          "result": {
+            "type": "string",
+            "enum": ["pass", "fail", "waived", "skipped"],
+            "description": "Result of check"
+          },
+          "location": {
+            "type": "string",
+            "description": "Path to evidence file"
+          },
+          "details": {
+            "type": "string",
+            "description": "Additional details"
+          },
+          "metrics": {
+            "type": "object",
+            "description": "Numerical metrics",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "hitl": {
+      "type": "array",
+      "description": "Human-in-the-loop items",
+      "items": {
+        "type": "object",
+        "required": ["hitl_id", "description", "status"],
+        "properties": {
+          "hitl_id": {
+            "type": "string",
+            "description": "HITL item reference"
+          },
+          "description": {
+            "type": "string",
+            "description": "What required human decision"
+          },
+          "trigger": {
+            "type": "string",
+            "description": "What triggered HITL"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "resolved", "cancelled"],
+            "description": "Current status"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "How it was resolved"
+          },
+          "resolved_by": {
+            "type": "string",
+            "description": "Who resolved it"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When created"
+          }
+        }
+      }
+    },
+    "unknowns": {
+      "type": "array",
+      "description": "UNKNOWNs encountered",
+      "items": {
+        "type": "object",
+        "required": ["description"],
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "What was unknown"
+          },
+          "impact": {
+            "type": "string",
+            "description": "Why it matters"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "How it was resolved"
+          },
+          "hitl_created": {
+            "type": "string",
+            "description": "HITL ID if created"
+          }
+        }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "description": "Key decisions made",
+      "items": {
+        "type": "object",
+        "required": ["decision", "rationale"],
+        "properties": {
+          "decision": {
+            "type": "string",
+            "description": "What was decided"
+          },
+          "rationale": {
+            "type": "string",
+            "description": "Why it was decided"
+          },
+          "alternatives": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Other options considered"
+          },
+          "impact": {
+            "type": "string",
+            "description": "Expected impact"
+          }
+        }
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "description": "Boundary compliance information",
+      "properties": {
+        "layers_modified": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["ui", "domain", "data", "platform"]
+          },
+          "description": "Which layers were modified"
+        },
+        "modules_modified": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Which modules were modified"
+        },
+        "cross_boundary_imports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": "string" },
+              "adr": { "type": "string" }
+            }
+          },
+          "description": "Cross-boundary imports with ADR"
+        },
+        "violations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Any boundary violations"
+        }
+      }
+    },
+    "quality_gates": {
+      "type": "object",
+      "description": "Quality gate results",
+      "properties": {
+        "linting": {
+          "type": "string",
+          "enum": ["pass", "fail", "waived", "skipped"]
+        },
+        "type_checking": {
+          "type": "string",
+          "enum": ["pass", "fail", "waived", "skipped"]
+        },
+        "unit_tests": {
+          "type": "string",
+          "enum": ["pass", "fail", "waived", "skipped"]
+        },
+        "integration_tests": {
+          "type": "string",
+          "enum": ["pass", "fail", "waived", "skipped"]
+        },
+        "security_scan": {
+          "type": "string",
+          "enum": ["pass", "fail", "waived", "skipped"]
+        },
+        "coverage": {
+          "type": "string",
+          "description": "Coverage percentage"
+        },
+        "waivers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Waivers granted"
+        }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "description": "Performance metrics",
+      "properties": {
+        "execution_time": {
+          "type": "string",
+          "description": "How long task took"
+        },
+        "complexity": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "Task complexity"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata",
+      "additionalProperties": true
+    }
+  }
+}
+```
+
+## Usage
+
+### Validation
+Validate trace logs against this schema using:
+- `ajv` (Node.js)
+- `jsonschema` (Python)
+- Online validators
+
+### Example Trace
+
+```json
+{
+  "trace_version": "1.0.0",
+  "agent_info": {
+    "agent_role": "primary",
+    "agent_id": "agent-primary-001",
+    "timestamp": "2026-01-22T10:30:00Z"
+  },
+  "task": {
+    "task_id": "FEAT-123",
+    "title": "Add JWT authentication",
+    "priority": "P0"
+  },
+  "intent": "Implement JWT-based authentication for REST API",
+  "files": [
+    {
+      "path": "src/domain/auth/middleware/auth.middleware.ts",
+      "action": "created",
+      "lines_changed": 85,
+      "reason": "Create JWT validation middleware"
+    },
+    {
+      "path": "src/domain/auth/controllers/auth.controller.ts",
+      "action": "modified",
+      "lines_changed": 120,
+      "reason": "Add login and refresh endpoints"
+    }
+  ],
+  "commands": [
+    {
+      "command": "npm test",
+      "profile": "test:unit",
+      "result": "success",
+      "output": "43 tests passed",
+      "exit_code": 0,
+      "timestamp": "2026-01-22T11:10:00Z"
+    },
+    {
+      "command": "npm run security:scan",
+      "profile": "security",
+      "result": "success",
+      "output": "No vulnerabilities found",
+      "exit_code": 0,
+      "timestamp": "2026-01-22T11:15:00Z"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "test",
+      "name": "Unit tests",
+      "result": "pass",
+      "location": "test-results/unit-tests.json",
+      "details": "43/43 tests passed",
+      "metrics": {
+        "total": 43,
+        "passed": 43,
+        "failed": 0
+      }
+    },
+    {
+      "type": "coverage",
+      "name": "Code coverage",
+      "result": "pass",
+      "location": "coverage/coverage-report.html",
+      "details": "92% coverage",
+      "metrics": {
+        "statements": 92.5,
+        "branches": 88.3,
+        "functions": 95.0,
+        "lines": 92.1
+      }
+    }
+  ],
+  "hitl": [
+    {
+      "hitl_id": "HITL-047",
+      "description": "Security review for authentication",
+      "trigger": "Security-related change",
+      "status": "resolved",
+      "resolution": "Approved with minor suggestions",
+      "resolved_by": "security-team",
+      "timestamp": "2026-01-22T11:00:00Z"
+    }
+  ],
+  "unknowns": [],
+  "decisions": [
+    {
+      "decision": "Use 1-hour token expiry",
+      "rationale": "Balance security and UX",
+      "alternatives": ["15 min", "24 hours"],
+      "impact": "Requires refresh token implementation"
+    }
+  ],
+  "boundaries": {
+    "layers_modified": ["domain"],
+    "modules_modified": ["auth"],
+    "cross_boundary_imports": [],
+    "violations": []
+  },
+  "quality_gates": {
+    "linting": "pass",
+    "type_checking": "pass",
+    "unit_tests": "pass",
+    "integration_tests": "pass",
+    "security_scan": "pass",
+    "coverage": "92%",
+    "waivers": []
+  },
+  "performance": {
+    "execution_time": "45 minutes",
+    "complexity": "medium"
+  }
+}
+```
+
+## References
+
+- Agent Log Template: /.repo/templates/AGENT_LOG_TEMPLATE.md
+- Agent Rules: /.repo/agents/AGENTS.md
+- Three-Pass Process: /.repo/agents/AGENTS.md

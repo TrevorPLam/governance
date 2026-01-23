@@ -1,0 +1,24 @@
+{
+  "name": "my-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A monorepo with governance framework",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "eslint packages/*/src --ext .ts,.tsx",
+    "lint:fix": "eslint packages/*/src --ext .ts,.tsx --fix",
+    "clean": "rm -rf packages/*/dist packages/*/node_modules node_modules",
+    "governance:validate": "node scripts/validate-governance.js",
+    "governance:verify": "npm run lint && npm test && npm run governance:validate"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  }
+}
